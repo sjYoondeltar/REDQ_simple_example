@@ -12,8 +12,6 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 
 if __name__ == '__main__':
-    
-    # wall_list = None
 
     obs_list =[
         [-4.0, 8.0, 32.0, 8.0],
@@ -50,6 +48,8 @@ if __name__ == '__main__':
             u = np.random.randn(2).reshape([-1, 1])
 
             xn, r, done = env.step(u)
+
+            print(xn)
 
             env.render()
 

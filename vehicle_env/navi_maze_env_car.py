@@ -1,11 +1,9 @@
 import sys
 
-# sys.path.append(".")
-
 import numpy as np
 import cv2
 from vehicle_env.vehicle_model import UNICAR
-from vehicle_env.sensor_model import InRANGEVehicleDetector
+from vehicle_env.sensor_model import SimpleSENSOR
 
 class NAVI_ENV(object):
 
@@ -25,6 +23,12 @@ class NAVI_ENV(object):
         self.t_max = t_max
         self.t = 0
         self.t_max_reach = False
+
+        self.sensor = SimpleSENSOR(
+            sensor_max=10,
+            n_sensor=9,
+            range_sensor=[-2*np.pi/3, 2*np.pi/3]
+        )
 
         self.level = int(level)
         self.reward_type = reward_type
@@ -169,16 +173,7 @@ class NAVI_ENV(object):
 
             r_obs = 0.
 
-        if self.reward_type == 'cart':
-
-            r_target = 0*self.coef_dis + self.coef_dis*(-np.square(self.dist/(self.car.pos_max[0])))
-
-        elif self.reward_type == 'polar':
-
-            r_target = 1*self.coef_dis -self.coef_dis*np.square(self.dist/(self.car.pos_max[0])) - self.coef_angle*np.square(2*diff_angle/np.pi)[0]
-
-        else:
-            r_target = 0
+        r_live = 1.
 
         if self.dist < self.terminal:
 
@@ -194,12 +189,18 @@ class NAVI_ENV(object):
 
         else:
 
-            return r_target
+            return r_live
 
 
     def step(self, u):
 
         xn = self.car.step(u)
+
+        self.sensor.update_sensors(self.car.x, self.obs_pts, self.bound_pts)
+
+        sensor_measure = self.sensor.sensor_info[:, 0].reshape([-1, 1])/self.sensor.sensor_max
+
+        # xn = np.concatenate([xn, sensor_measure], axis=0)
 
         self.check_contact()
 
@@ -217,7 +218,7 @@ class NAVI_ENV(object):
 
             self.t_max_reach = True
 
-        return xn, r, self.terminal
+        return sensor_measure, r, self.terminal
 
 
     def project_vec(self, vec):
@@ -258,6 +259,12 @@ class NAVI_ENV(object):
                 self.img = cv2.circle(self.img, traj_xy, 1, (0, 0, 255), 2)
 
         self.img = cv2.arrowedLine(self.img, (x_pxl[0], x_pxl[1]), (xa_pxl[0], xa_pxl[1]), (0, 255, 255), 2)
+
+        sensor_pxl = self.project_vec(self.sensor.sensor_info[:, 1:].T)
+
+        for s_idx in range(self.sensor.n_sensor):
+
+            self.img = cv2.arrowedLine(self.img, (x_pxl[0], x_pxl[1]), (sensor_pxl[0, s_idx], sensor_pxl[1, s_idx]), (0, 0, 255), 2)
 
         if self.obs_pts is not None:
 
@@ -372,12 +379,12 @@ class NAVI_ENV(object):
 
 if __name__ == '__main__':
 
-    # wall_list =[[-16.0, 8.0, 8.0, 8.0],
-    #             [12.0, 8.0, 16.0, 8.0],
-    #             [-16.0, -8.0, 8.0, 8.0],
-    #             [12.0, -8.0, 16.0, 8.0]]
+    wall_list =[[-16.0, 8.0, 8.0, 8.0],
+                [12.0, 8.0, 16.0, 8.0],
+                [-16.0, -8.0, 8.0, 8.0],
+                [12.0, -8.0, 16.0, 8.0]]
 
-    wall_list = None
+    # wall_list = None
 
     # env = NAVI_ENV(x_init=[-17.0, 0.0, 0.0], target_fix=None, reward_type='polar', t_max=500, obs_list=wall_list)
     env = NAVI_ENV(x_init=[0.0, 0, 0.0], level=2, reward_type='polar', t_max=500, obs_list=wall_list)
