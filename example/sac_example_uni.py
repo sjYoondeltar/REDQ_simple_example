@@ -6,6 +6,7 @@ import time
 import numpy as np
 import math
 
+from rl_agent.sac import SACAgent
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 
@@ -35,6 +36,12 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=2000, obs_list=obs_list)
 
+    SACAgent(
+        state_size=5,
+        action_size=1,
+        hidden_size=64
+    )
+        
     for eps in range(10):
         
         done = False
@@ -43,9 +50,10 @@ if __name__ == '__main__':
 
         print(env.target)
 
-        while not env.t_max_reach and not done :
+        while not env.t_max_reach and not done:
 
             u = np.random.randn(2).reshape([-1, 1])
+            u[0, :] = 1
 
             xn, r, done = env.step(u)
 
