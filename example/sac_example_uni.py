@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
             steer = agent.get_action(x, TRAIN)
 
-            u = np.array([1, steer[0][0]]).reshape([-1, 1])
+            u = np.array([1, np.pi*steer[0][0]/6]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
