@@ -279,12 +279,12 @@ class SACAgent(object):
             
             next_policy, next_log_policy = self.eval_action(next_states)
             
-            target_next_q_value1, target_next_q_value2 = self.target_critic(torch.Tensor(next_states).to(device), next_policy)
+            target_next_q_value1, target_next_q_value2 = self.target_critic(torch.Tensor(next_states).to(self.device), next_policy)
             
             min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
 
             if self.train_alpha:
-                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(device) * next_log_policy.squeeze(1)
+                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(self.device) * next_log_policy.squeeze(1)
             else:
                 min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha * next_log_policy.squeeze(1)
 
