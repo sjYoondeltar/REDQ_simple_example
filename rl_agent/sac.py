@@ -17,24 +17,21 @@ class Actor(nn.Module):
 
         self.fc1 = nn.Linear(state_size, hidden_l_size)
         self.fc2 = nn.Linear(hidden_l_size, hidden_l_size)
-        self.fc3 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc3 = nn.Linear(hidden_l_size, action_size)
         self.fc4 = nn.Linear(hidden_l_size, action_size)
-        self.fc5 = nn.Linear(hidden_l_size, action_size)
 
         self.fc_module=nn.Sequential(
             self.fc1,
             nn.SELU(inplace=True),
             self.fc2,
-            nn.SELU(inplace=True),
-            self.fc3,
             nn.SELU(inplace=True)
         )
         
     def forward(self, x):
 
         x = self.fc_module(x)
-        mu = self.fc4(x)
-        log_std = self.fc5(x)
+        mu = self.fc3(x)
+        log_std = self.fc4(x)
         
         log_std = torch.clamp(log_std, min=self.log_std_min, max=self.log_std_max)
         std = 2*torch.exp(log_std)
@@ -48,30 +45,24 @@ class Critic(nn.Module):
         # Q1 architecture
         self.fc1 = nn.Linear(state_size + action_size, hidden_l_size)
         self.fc2 = nn.Linear(hidden_l_size, hidden_l_size)
-        self.fc3 = nn.Linear(hidden_l_size, hidden_l_size)
-        self.fc4 = nn.Linear(hidden_l_size, 1)
+        self.fc3 = nn.Linear(hidden_l_size, 1)
         
         self.fc_module1=nn.Sequential(
             self.fc1,
             nn.SELU(inplace=True),
             self.fc2,
-            nn.SELU(inplace=True),
-            self.fc3,
             nn.SELU(inplace=True)
         )
 
         # Q2 architecture
-        self.fc5 = nn.Linear(state_size + action_size, hidden_l_size)
-        self.fc6 = nn.Linear(hidden_l_size, hidden_l_size)
-        self.fc7 = nn.Linear(hidden_l_size, hidden_l_size)
-        self.fc8 = nn.Linear(hidden_l_size, 1)
+        self.fc4 = nn.Linear(state_size + action_size, hidden_l_size)
+        self.fc5 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc6 = nn.Linear(hidden_l_size, 1)
         
         self.fc_module2=nn.Sequential(
+            self.fc4,
+            nn.SELU(inplace=False),
             self.fc5,
-            nn.SELU(inplace=False),
-            self.fc6,
-            nn.SELU(inplace=False),
-            self.fc7,
             nn.SELU(inplace=False)
         )
 
@@ -80,11 +71,11 @@ class Critic(nn.Module):
 
         x1 = self.fc_module1(x)
 
-        q_value1 = self.fc4(x1)
+        q_value1 = self.fc3(x1)
 
         x2 = self.fc_module2(x)
 
-        q_value2 = self.fc8(x2.clone())
+        q_value2 = self.fc6(x2.clone())
 
         return q_value1, q_value2
 
@@ -175,7 +166,7 @@ class SACAgent(object):
         self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
         self.critic = Critic(state_size, action_size, hidden_size).to(self.device)
         self.target_critic = Critic(state_size, action_size, hidden_size).to(self.device)
-
+        
         self.hard_target_update()
 
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=lr_a, eps=1e-5)
