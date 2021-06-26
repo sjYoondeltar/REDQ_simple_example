@@ -218,7 +218,7 @@ class NAVI_ENV(object):
 
             self.t_max_reach = True
 
-        return sensor_measure, r, self.terminal
+        return sensor_measure.reshape([1, -1]), r, self.terminal
 
 
     def project_vec(self, vec):
@@ -283,6 +283,10 @@ class NAVI_ENV(object):
 
         _ = self.car.init_state()
 
+        self.sensor.update_sensors(self.car.x, self.obs_pts, self.bound_pts)
+
+        sensor_measure = self.sensor.sensor_info[:, 0].reshape([-1, 1])/self.sensor.sensor_max
+
         self.generate_target()
 
         self.t = 0
@@ -297,7 +301,7 @@ class NAVI_ENV(object):
 
         self.obs_contact = False
 
-        return self.car.x, self.target
+        return sensor_measure.reshape([1, -1]), self.target
 
     def get_terminal(self):
         

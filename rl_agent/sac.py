@@ -172,9 +172,9 @@ class SACAgent(object):
         use_cuda = torch.cuda.is_available()
         self.device = torch.device('cuda' if use_cuda else 'cpu')
 
-        self.actor = Actor(state_size, action_size, hidden_size)
-        self.critic = Critic(state_size, action_size, hidden_size)
-        self.target_critic = Critic(state_size, action_size, hidden_size)
+        self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
+        self.critic = Critic(state_size, action_size, hidden_size).to(self.device)
+        self.target_critic = Critic(state_size, action_size, hidden_size).to(self.device)
 
         self.hard_target_update()
 
@@ -213,6 +213,16 @@ class SACAgent(object):
         for param, target_param in zip(self.critic.parameters(), self.target_critic.parameters()):
             target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
 
+    def get_action(self, states, is_training):
+    
+        mu, std = self.actor(torch.Tensor(states).to(self.device))
+
+        normal = Normal(mu, std)
+        z = normal.rsample() # reparameterization trick (mean + std * N(0,1))
+        action = torch.tanh(z)
+
+        return action.data.cpu().numpy()
+
     def eval_action(self, states, epsilon=1e-6):
 
         mu, std = self.actor(torch.Tensor(states).to(self.device))
@@ -242,72 +252,77 @@ class SACAgent(object):
             
     def train_model(self):
 
-        if self.n_step==1:
-        
-            mini_batch = self.buffer.sample(self.minibatch_size)
-        
-        else:
-        
-            mini_batch = self.buffer.main_buffer.sample(self.minibatch_size)
-        
-        mini_batch = np.array(mini_batch)
-        states = np.vstack(mini_batch[:, 0])
-        actions = list(mini_batch[:, 1])
-        rewards = list(mini_batch[:, 2])
-        next_states = np.vstack(mini_batch[:, 3])
-        masks = list(mini_batch[:, 4])
+        if self.sample_enough:
 
-        actions = torch.Tensor(actions).detach().to(self.device).squeeze(1)
-        rewards = torch.Tensor(rewards).to(self.device)
-        masks = torch.Tensor(masks).to(self.device)
-
-        criterion = torch.nn.MSELoss()
-        
-        q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), actions)
-        
-        next_policy, next_log_policy = self.eval_action(next_states)
-        
-        target_next_q_value1, target_next_q_value2 = self.target_critic(torch.Tensor(next_states).to(device), next_policy)
-        
-        min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
-
-        if self.train_alpha:
-            min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(device) * next_log_policy.squeeze(1)
-        else:
-            min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha * next_log_policy.squeeze(1)
-
-        if self.n_step == 1:
-            target = rewards + masks * self.gamma * min_target_next_q_value
-        else:
-            target = rewards + masks * (self.gamma**self.n_step) * min_target_next_q_value
-
-        critic_loss = criterion(q_value2.squeeze(1), target.detach()) + criterion(q_value1.squeeze(1), target.detach()) 
-        self.critic_optimizer.zero_grad()
-        critic_loss.backward()
-        self.critic_optimizer.step()
-
-        # update actor
-        policy, log_policy = self.eval_action(states)
-        
-        q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), policy)
-        min_q_value = torch.min(q_value1, q_value2)
-        
-        if self.train_alpha:
-            actor_loss = ((self.alpha.to(self.device) * log_policy) - min_q_value).mean() 
-        else:        
-            actor_loss = ((self.alpha * log_policy) - min_q_value).mean() 
-        
-        self.actor_optimizer.zero_grad()
-        actor_loss.backward()
-        self.actor_optimizer.step()
-
-        if self.train_alpha:
+            if self.n_step==1:
                 
-            # update alpha
-            alpha_loss = -(self.log_alpha.to(self.device) * (log_policy + self.target_entropy).detach()).mean() 
-            self.alpha_optimizer.zero_grad()
-            alpha_loss.backward()
-            self.alpha_optimizer.step()
+                mini_batch = self.buffer.sample(self.minibatch_size)
+            
+            else:
+            
+                mini_batch = self.buffer.main_buffer.sample(self.minibatch_size)
+            
+            mini_batch = np.array(mini_batch)
+            states = np.vstack(mini_batch[:, 0])
+            actions = list(mini_batch[:, 1])
+            rewards = list(mini_batch[:, 2])
+            next_states = np.vstack(mini_batch[:, 3])
+            masks = list(mini_batch[:, 4])
 
-            self.alpha = torch.exp(self.log_alpha) 
-        
+            actions = torch.Tensor(actions).detach().to(self.device).squeeze(1)
+            rewards = torch.Tensor(rewards).to(self.device)
+            masks = torch.Tensor(masks).to(self.device)
+
+            criterion = torch.nn.MSELoss()
+            
+            q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), actions)
+            
+            next_policy, next_log_policy = self.eval_action(next_states)
+            
+            target_next_q_value1, target_next_q_value2 = self.target_critic(torch.Tensor(next_states).to(device), next_policy)
+            
+            min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
+
+            if self.train_alpha:
+                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(device) * next_log_policy.squeeze(1)
+            else:
+                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha * next_log_policy.squeeze(1)
+
+            if self.n_step == 1:
+                target = rewards + masks * self.gamma * min_target_next_q_value
+            else:
+                target = rewards + masks * (self.gamma**self.n_step) * min_target_next_q_value
+
+            critic_loss = criterion(q_value2.squeeze(1), target.detach()) + criterion(q_value1.squeeze(1), target.detach()) 
+            self.critic_optimizer.zero_grad()
+            critic_loss.backward()
+            self.critic_optimizer.step()
+
+            # update actor
+            policy, log_policy = self.eval_action(states)
+            
+            q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), policy)
+            min_q_value = torch.min(q_value1, q_value2)
+            
+            if self.train_alpha:
+                actor_loss = ((self.alpha.to(self.device) * log_policy) - min_q_value).mean() 
+            else:        
+                actor_loss = ((self.alpha * log_policy) - min_q_value).mean() 
+            
+            self.actor_optimizer.zero_grad()
+            actor_loss.backward()
+            self.actor_optimizer.step()
+
+            if self.train_alpha:
+                    
+                # update alpha
+                alpha_loss = -(self.log_alpha.to(self.device) * (log_policy + self.target_entropy).detach()).mean() 
+                self.alpha_optimizer.zero_grad()
+                alpha_loss.backward()
+                self.alpha_optimizer.step()
+
+                self.alpha = torch.exp(self.log_alpha) 
+            
+        else:
+
+            pass

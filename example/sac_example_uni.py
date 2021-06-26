@@ -37,8 +37,8 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=2000, obs_list=obs_list)
 
-    SACAgent(
-        state_size=5,
+    agent = SACAgent(
+        state_size=9,
         action_size=1,
         hidden_size=64
     )
@@ -51,15 +51,20 @@ if __name__ == '__main__':
 
         while not env.t_max_reach and not done:
 
-            u = np.random.randn(2).reshape([-1, 1])
-            u[0, :] = 1
+            steer = agent.get_action(x, TRAIN)
+
+            u = np.array([1, steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
-            print(xn)
+            mask = 0 if done else 1
 
             if RENDER:
                 
                 env.render()
+
+            agent.push_samples(x, steer, r, xn, mask)
+
+            agent.train_model()
 
             x = xn
