@@ -245,35 +245,35 @@ class REDQAgent(object):
 
         if self.sample_enough:
 
-            if self.n_step==1:
-                
-                mini_batch = self.buffer.sample(self.minibatch_size)
-            
-            else:
-            
-                mini_batch = self.buffer.main_buffer.sample(self.minibatch_size)
-            
-            mini_batch = np.array(mini_batch)
-            states = np.vstack(mini_batch[:, 0])
-            actions = list(mini_batch[:, 1])
-            rewards = list(mini_batch[:, 2])
-            next_states = np.vstack(mini_batch[:, 3])
-            masks = list(mini_batch[:, 4])
-
-            actions = torch.Tensor(actions).detach().to(self.device).squeeze(1)
-            rewards = torch.Tensor(rewards).to(self.device)
-            masks = torch.Tensor(masks).to(self.device)
-
             # -----------critic update
 
             for _ in range(self.G):
+
+                if self.n_step==1:
+                    
+                    mini_batch = self.buffer.sample(self.minibatch_size)
+                
+                else:
+                
+                    mini_batch = self.buffer.main_buffer.sample(self.minibatch_size)
+                
+                mini_batch = np.array(mini_batch)
+                states = np.vstack(mini_batch[:, 0])
+                actions = list(mini_batch[:, 1])
+                rewards = list(mini_batch[:, 2])
+                next_states = np.vstack(mini_batch[:, 3])
+                masks = list(mini_batch[:, 4])
+
+                actions = torch.Tensor(actions).detach().to(self.device).squeeze(1)
+                rewards = torch.Tensor(rewards).to(self.device)
+                masks = torch.Tensor(masks).to(self.device)
             
                 idx = np.random.choice(self.N, self.M, replace=False)
 
                 next_policy, next_log_policy = self.eval_action(next_states)
 
-                target_next_q_value1 = self.critic_list[idx[0]](torch.Tensor(next_states).to(self.device), next_policy)
-                target_next_q_value2 = self.critic_list[idx[1]](torch.Tensor(next_states).to(self.device), next_policy)
+                target_next_q_value1 = self.target_critic_list[idx[0]](torch.Tensor(next_states).to(self.device), next_policy)
+                target_next_q_value2 = self.target_critic_list[idx[1]](torch.Tensor(next_states).to(self.device), next_policy)
                 
                 min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
                 
