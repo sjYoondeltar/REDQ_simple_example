@@ -36,13 +36,15 @@ if __name__ == '__main__':
         u_max=[2, np.pi/6],
         reward_type='polar',
         target_fix=target,
-        level=2, t_max=2000, obs_list=obs_list)
+        level=2, t_max=3000, obs_list=obs_list)
 
     agent = REDQAgent(
         state_size=9,
         action_size=1,
         hidden_size=64
     )
+
+    recent_mission_results = []
         
     for eps in range(MAX_EPISODE):
         
@@ -78,6 +80,17 @@ if __name__ == '__main__':
 
             steps_ep += 1
         
-        mission_results = 'success!' if env.reach else 'fail'
+        recent_mission_results.append(float(env.reach))
 
-        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results)
+        if len(recent_mission_results)>10:
+
+            recent_mission_results.pop(0)
+
+        mission_results = 'success!' if env.reach else 'fail'
+        progress_status = 'train...' if agent.sample_enough else 'explore'
+
+        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
+
+        if np.mean(recent_mission_results) > 0.99:
+
+            break
