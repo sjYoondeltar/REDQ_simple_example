@@ -11,6 +11,7 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 RENDER = False
 TRAIN = True
+MAX_EPISODE = 500
 
 
 if __name__ == '__main__':
@@ -43,7 +44,7 @@ if __name__ == '__main__':
         hidden_size=64
     )
         
-    for eps in range(10):
+    for eps in range(MAX_EPISODE):
         
         done = False
 

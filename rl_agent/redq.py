@@ -42,8 +42,10 @@ class Actor(nn.Module):
         return mu, std
 
 class Critic(nn.Module):
-    def __init__(self, state_size, action_size, hidden_size):
+    def __init__(self, state_size, action_size, hidden_size, critic_id):
         super().__init__()
+
+        self.critic_id = critic_id
 
         # Q1 architecture
         self.fc1 = nn.Linear(state_size + action_size, hidden_size)
@@ -60,21 +62,6 @@ class Critic(nn.Module):
             nn.SELU(inplace=True)
         )
 
-        # Q2 architecture
-        self.fc5 = nn.Linear(state_size + action_size, hidden_size)
-        self.fc6 = nn.Linear(hidden_size, hidden_size)
-        self.fc7 = nn.Linear(hidden_size, hidden_size)
-        self.fc8 = nn.Linear(hidden_size, 1)
-        
-        self.fc_module2=nn.Sequential(
-            self.fc5,
-            nn.SELU(inplace=False),
-            self.fc6,
-            nn.SELU(inplace=False),
-            self.fc7,
-            nn.SELU(inplace=False)
-        )
-
     def forward(self, states, actions):
         x = torch.cat([states, actions], dim=1)
 
@@ -82,11 +69,7 @@ class Critic(nn.Module):
 
         q_value1 = self.fc4(x1)
 
-        x2 = self.fc_module2(x)
-
-        q_value2 = self.fc8(x2.clone())
-
-        return q_value1, q_value2
+        return q_value1
 
 
 
@@ -182,13 +165,22 @@ class REDQAgent(object):
         self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=lr_a, eps=1e-5)
 
+        self.critic_list = []
+        self.target_critic_list = []
+        self.critic_optimizer_list = []
 
-        self.hard_target_update()
+        for i in range(self.N):
 
-        self.critic = Critic(state_size, action_size, hidden_size).to(self.device)
-        self.target_critic = Critic(state_size, action_size, hidden_size).to(self.device)
-        self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=lr_c, eps=1e-5)
+            critic = Critic(state_size, action_size, hidden_size, i).to(self.device)
+            optimizer = optim.Adam(critic.parameters(), lr=lr_c, eps=1e-5)
+            
+            target_critic = Critic(state_size, action_size, hidden_size, i).to(self.device)
+            
+            target_critic.load_state_dict(critic.state_dict())
 
+            self.critic_list.append(critic)
+            self.target_critic_list.append(target_critic)
+            self.critic_optimizer_list.append(optimizer)
 
         if self.n_step==1:
             
@@ -214,12 +206,8 @@ class REDQAgent(object):
 
         self.sample_enough = False
 
-    def hard_target_update(self):
-
-        self.target_critic.load_state_dict(self.critic.state_dict())
-
-    def soft_target_update(self):
-        for param, target_param in zip(self.critic.parameters(), self.target_critic.parameters()):
+    def soft_target_update(self, critic, target_critic):
+        for param, target_param in zip(critic.parameters(), target_critic.parameters()):
             target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
 
     def get_action(self, states, is_training):
@@ -282,35 +270,55 @@ class REDQAgent(object):
             rewards = torch.Tensor(rewards).to(self.device)
             masks = torch.Tensor(masks).to(self.device)
 
-            criterion = torch.nn.MSELoss()
-            
-            q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), actions)
-            
-            next_policy, next_log_policy = self.eval_action(next_states)
-            
-            target_next_q_value1, target_next_q_value2 = self.target_critic(torch.Tensor(next_states).to(self.device), next_policy)
-            
-            min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
+            # -----------critic update
 
-            if self.train_alpha:
-                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(self.device) * next_log_policy.squeeze(1)
-            else:
-                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha * next_log_policy.squeeze(1)
+            for _ in range(self.G):
+            
+                idx = np.random.choice(self.N, self.M, replace=False)
 
-            if self.n_step == 1:
-                target = rewards + masks * self.gamma * min_target_next_q_value
-            else:
-                target = rewards + masks * (self.gamma**self.n_step) * min_target_next_q_value
+                next_policy, next_log_policy = self.eval_action(next_states)
 
-            critic_loss = criterion(q_value2.squeeze(1), target.detach()) + criterion(q_value1.squeeze(1), target.detach()) 
-            self.critic_optimizer.zero_grad()
-            critic_loss.backward()
-            self.critic_optimizer.step()
+                target_next_q_value1 = self.critic_list[idx[0]](torch.Tensor(next_states).to(self.device), next_policy)
+                target_next_q_value2 = self.critic_list[idx[1]](torch.Tensor(next_states).to(self.device), next_policy)
+                
+                min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
+                
+                if self.train_alpha:
+
+                    min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(self.device) * next_log_policy.squeeze(1)
+                
+                else:
+                
+                    min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha * next_log_policy.squeeze(1)
+
+                if self.n_step == 1:
+                
+                    target = rewards + masks * self.gamma * min_target_next_q_value
+                
+                else:
+                
+                    target = rewards + masks * (self.gamma**self.n_step) * min_target_next_q_value
+
+                for i, (critic, target_critic, optimizer) in enumerate(zip(self.critic_list, self.target_critic_list, self.critic_optimizer_list)):
+
+                    criterion = torch.nn.MSELoss()
+
+                    q_value = critic(torch.Tensor(states).to(self.device), actions)
+
+                    critic_loss = criterion(q_value.squeeze(1), target.detach()) 
+                
+                    optimizer.zero_grad()
+                    critic_loss.backward()
+                    optimizer.step()
+
+                    self.soft_target_update(critic, target_critic)
 
             # update actor
             policy, log_policy = self.eval_action(states)
             
-            q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), policy)
+            q_value1 = self.critic_list[idx[0]](torch.Tensor(states).to(self.device), policy)
+            q_value2 = self.critic_list[idx[1]](torch.Tensor(states).to(self.device), policy)
+            
             min_q_value = torch.min(q_value1, q_value2)
             
             if self.train_alpha:
@@ -331,8 +339,6 @@ class REDQAgent(object):
                 self.alpha_optimizer.step()
 
                 self.alpha = torch.exp(self.log_alpha)
-
-            self.soft_target_update()
             
         else:
 
