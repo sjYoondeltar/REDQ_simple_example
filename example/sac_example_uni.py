@@ -41,7 +41,9 @@ if __name__ == '__main__':
     agent = SACAgent(
         state_size=9,
         action_size=1,
-        hidden_size=64
+        hidden_size=64,
+        buffer_size=2**14,
+        minibatch_size=128,
     )
 
     recent_mission_results = []
