@@ -155,7 +155,7 @@ class NAVI_ENV(object):
 
         diff_angle = np.arctan2(y_rel, x_rel)
 
-        r_reach = 10.0 if self.dist < self.terminal_cond else 0
+        r_reach = 0.0 if self.dist < self.terminal_cond else 0
 
         if self.wall_contact:
 
