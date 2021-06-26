@@ -67,7 +67,9 @@ if __name__ == '__main__':
 
             agent.push_samples(x, steer, r, xn, mask)
 
-            agent.train_model()
+            if TRAIN:
+                
+                agent.train_model()
 
             x = xn
 
