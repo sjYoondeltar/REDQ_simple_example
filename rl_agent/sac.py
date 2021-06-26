@@ -10,7 +10,7 @@ from torch.distributions import Normal
 
 class Actor(nn.Module):
     def __init__(self, state_size, action_size, hidden_size, log_std_min=-20, log_std_max=10):
-        super(Actor, self).__init__()
+        super().__init__()
         
         self.log_std_min = log_std_min
         self.log_std_max = log_std_max
@@ -43,7 +43,7 @@ class Actor(nn.Module):
 
 class Critic(nn.Module):
     def __init__(self, state_size, action_size, hidden_size):
-        super(Critic, self).__init__()
+        super().__init__()
 
         # Q1 architecture
         self.fc1 = nn.Linear(state_size + action_size, hidden_size)
@@ -140,3 +140,16 @@ class NStepMemory:
 
         return R
 
+class SAC(object):
+    def __init__(
+        self,
+        state_size,
+        action_size,
+        hidden_size,
+        buffer_size=2**13,
+        minibatch_size=256,
+        minibatch_size=256
+        ):
+        super().__init__()
+
+        self.actor = Actor()
