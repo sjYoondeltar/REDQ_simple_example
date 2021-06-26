@@ -322,6 +322,8 @@ class SACAgent(object):
                 self.alpha_optimizer.step()
 
                 self.alpha = torch.exp(self.log_alpha) 
+
+            self.soft_target_update()
             
         else:
 

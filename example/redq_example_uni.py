@@ -1,14 +1,16 @@
 import sys
-sys.path.append(".")
 
 import ray
 import datetime
 import time
 import numpy as np
 import math
+
+from rl_agent.sac import SACAgent
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
-
+RENDER = False
+TRAIN = True
 
 
 if __name__ == '__main__':
@@ -35,22 +37,42 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=2000, obs_list=obs_list)
 
+    agent = SACAgent(
+        state_size=9,
+        action_size=1,
+        hidden_size=64
+    )
+        
     for eps in range(10):
         
         done = False
 
         x, target = env.reset()
 
-        print(env.target)
+        steps_ep=0
 
-        while not env.t_max_reach and not done :
+        while not env.t_max_reach and not done:
 
-            u = np.random.randn(2).reshape([-1, 1])
+            steer = agent.get_action(x, TRAIN)
+
+            u = np.array([1, steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
-            print(xn)
+            mask = 0 if done else 1
 
-            env.render()
+            if RENDER:
+                
+                env.render()
+
+            agent.push_samples(x, steer, r, xn, mask)
+
+            agent.train_model()
 
             x = xn
+
+            steps_ep += 1
+        
+        mission_results = 'success!' if env.reach else 'fail'
+
+        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results)
