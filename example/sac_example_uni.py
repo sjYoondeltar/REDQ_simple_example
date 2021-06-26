@@ -54,6 +54,10 @@ if __name__ == '__main__':
 
         steps_ep=0
 
+        if agent.n_step>1:
+
+            agent.buffer.memory = []
+
         while not env.t_max_reach and not done:
 
             steer = agent.get_action(x, TRAIN)

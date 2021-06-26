@@ -183,11 +183,11 @@ class SACAgent(object):
 
         if self.n_step==1:
             
-            self.buffer = ExperienceReplayMemory(buffer_size)
+            self.buffer = ExperienceReplayMemory(self.buffer_size)
 
         else:
 
-            self.buffer = NStepMemory(self.n_step, self.gamma, self.minibatch_size)
+            self.buffer = NStepMemory(self.n_step, self.gamma, self.buffer_size)
 
         self.train_alpha = train_alpha
 
