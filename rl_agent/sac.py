@@ -9,17 +9,17 @@ import math
 from torch.distributions import Normal
 
 class Actor(nn.Module):
-    def __init__(self, state_size, action_size, hidden_size, log_std_min=-20, log_std_max=10):
+    def __init__(self, state_size, action_size, hidden_l_size, log_std_min=-20, log_std_max=10):
         super().__init__()
         
         self.log_std_min = log_std_min
         self.log_std_max = log_std_max
 
-        self.fc1 = nn.Linear(state_size, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, hidden_size)
-        self.fc4 = nn.Linear(hidden_size, action_size)
-        self.fc5 = nn.Linear(hidden_size, action_size)
+        self.fc1 = nn.Linear(state_size, hidden_l_size)
+        self.fc2 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc3 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc4 = nn.Linear(hidden_l_size, action_size)
+        self.fc5 = nn.Linear(hidden_l_size, action_size)
 
         self.fc_module=nn.Sequential(
             self.fc1,
@@ -42,14 +42,14 @@ class Actor(nn.Module):
         return mu, std
 
 class Critic(nn.Module):
-    def __init__(self, state_size, action_size, hidden_size):
+    def __init__(self, state_size, action_size, hidden_l_size):
         super().__init__()
 
         # Q1 architecture
-        self.fc1 = nn.Linear(state_size + action_size, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, hidden_size)
-        self.fc4 = nn.Linear(hidden_size, 1)
+        self.fc1 = nn.Linear(state_size + action_size, hidden_l_size)
+        self.fc2 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc3 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc4 = nn.Linear(hidden_l_size, 1)
         
         self.fc_module1=nn.Sequential(
             self.fc1,
@@ -61,10 +61,10 @@ class Critic(nn.Module):
         )
 
         # Q2 architecture
-        self.fc5 = nn.Linear(state_size + action_size, hidden_size)
-        self.fc6 = nn.Linear(hidden_size, hidden_size)
-        self.fc7 = nn.Linear(hidden_size, hidden_size)
-        self.fc8 = nn.Linear(hidden_size, 1)
+        self.fc5 = nn.Linear(state_size + action_size, hidden_l_size)
+        self.fc6 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc7 = nn.Linear(hidden_l_size, hidden_l_size)
+        self.fc8 = nn.Linear(hidden_l_size, 1)
         
         self.fc_module2=nn.Sequential(
             self.fc5,
@@ -145,7 +145,7 @@ class SACAgent(object):
         self,
         state_size,
         action_size,
-        hidden_size,
+        hidden_l_size,
         buffer_size=2**13,
         minibatch_size=256,
         gamma=0.99,
@@ -161,7 +161,7 @@ class SACAgent(object):
 
         self.state_size = state_size
         self.action_size = action_size
-        self.hidden_size = hidden_size
+        self.hidden_l_size = hidden_l_size
         self.buffer_size = buffer_size
         self.minibatch_size = minibatch_size
         self.gamma = gamma
@@ -172,9 +172,9 @@ class SACAgent(object):
         use_cuda = torch.cuda.is_available()
         self.device = torch.device('cuda' if use_cuda else 'cpu')
 
-        self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
-        self.critic = Critic(state_size, action_size, hidden_size).to(self.device)
-        self.target_critic = Critic(state_size, action_size, hidden_size).to(self.device)
+        self.actor = Actor(state_size, action_size, hidden_l_size).to(self.device)
+        self.critic = Critic(state_size, action_size, hidden_l_size).to(self.device)
+        self.target_critic = Critic(state_size, action_size, hidden_l_size).to(self.device)
 
         self.hard_target_update()
 
