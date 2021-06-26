@@ -135,7 +135,7 @@ class REDQAgent(object):
         exploration_step=5000,
         N=5,
         M=2,
-        G=5
+        G=10
         ):
         super().__init__()
 

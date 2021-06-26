@@ -84,7 +84,7 @@ if __name__ == '__main__':
         
         recent_mission_results.append(float(env.reach))
 
-        if len(recent_mission_results)>10:
+        if len(recent_mission_results)>5:
 
             recent_mission_results.pop(0)
 
