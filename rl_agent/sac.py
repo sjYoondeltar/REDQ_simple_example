@@ -145,7 +145,7 @@ class SACAgent(object):
         self,
         state_size,
         action_size,
-        hidden_l_size,
+        hidden_size,
         buffer_size=2**13,
         minibatch_size=256,
         gamma=0.99,
@@ -161,7 +161,7 @@ class SACAgent(object):
 
         self.state_size = state_size
         self.action_size = action_size
-        self.hidden_l_size = hidden_l_size
+        self.hidden_size = hidden_size
         self.buffer_size = buffer_size
         self.minibatch_size = minibatch_size
         self.gamma = gamma
@@ -172,9 +172,9 @@ class SACAgent(object):
         use_cuda = torch.cuda.is_available()
         self.device = torch.device('cuda' if use_cuda else 'cpu')
 
-        self.actor = Actor(state_size, action_size, hidden_l_size).to(self.device)
-        self.critic = Critic(state_size, action_size, hidden_l_size).to(self.device)
-        self.target_critic = Critic(state_size, action_size, hidden_l_size).to(self.device)
+        self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
+        self.critic = Critic(state_size, action_size, hidden_size).to(self.device)
+        self.target_critic = Critic(state_size, action_size, hidden_size).to(self.device)
 
         self.hard_target_update()
 

@@ -328,7 +328,9 @@ class REDQAgent(object):
                 alpha_loss.backward()
                 self.alpha_optimizer.step()
 
-                self.alpha = torch.exp(self.log_alpha) 
+                self.alpha = torch.exp(self.log_alpha)
+
+            self.soft_target_update()
             
         else:
 
