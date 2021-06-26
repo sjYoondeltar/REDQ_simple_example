@@ -49,6 +49,8 @@ if __name__ == '__main__':
 
         x, target = env.reset()
 
+        steps_ep=0
+
         while not env.t_max_reach and not done:
 
             steer = agent.get_action(x, TRAIN)
@@ -68,3 +70,9 @@ if __name__ == '__main__':
             agent.train_model()
 
             x = xn
+
+            steps_ep += 1
+        
+        mission_results = 'success!' if env.reach else 'fail'
+
+        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results)
