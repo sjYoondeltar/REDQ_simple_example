@@ -36,7 +36,7 @@ if __name__ == '__main__':
         u_max=[2, np.pi/6],
         reward_type='polar',
         target_fix=target,
-        level=2, t_max=2000, obs_list=obs_list)
+        level=2, t_max=3000, obs_list=obs_list)
 
     agent = SACAgent(
         state_size=9,

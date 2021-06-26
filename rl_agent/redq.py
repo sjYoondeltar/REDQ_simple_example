@@ -174,19 +174,21 @@ class REDQAgent(object):
 
         use_cuda = torch.cuda.is_available()
         self.device = torch.device('cuda' if use_cuda else 'cpu')
-
-        self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
-        self.critic = Critic(state_size, action_size, hidden_size).to(self.device)
-        self.target_critic = Critic(state_size, action_size, hidden_size).to(self.device)
-
+        
         self.N = N # number of critics in the ensemble
         self.M = M # number of target critics that are randomly selected
         self.G = G # Updates per step ~ UTD-ratio
 
+        self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
+        self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=lr_a, eps=1e-5)
+
+
         self.hard_target_update()
 
-        self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=lr_a, eps=1e-5)
+        self.critic = Critic(state_size, action_size, hidden_size).to(self.device)
+        self.target_critic = Critic(state_size, action_size, hidden_size).to(self.device)
         self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=lr_c, eps=1e-5)
+
 
         if self.n_step==1:
             

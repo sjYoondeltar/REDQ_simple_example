@@ -6,7 +6,7 @@ import time
 import numpy as np
 import math
 
-from rl_agent.sac import SACAgent
+from rl_agent.redq import REDQAgent
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 RENDER = False
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=2000, obs_list=obs_list)
 
-    agent = SACAgent(
+    agent = REDQAgent(
         state_size=9,
         action_size=1,
         hidden_size=64
@@ -50,6 +50,10 @@ if __name__ == '__main__':
         x, target = env.reset()
 
         steps_ep=0
+
+        if agent.n_step>1:
+
+            agent.buffer.memory = []
 
         while not env.t_max_reach and not done:
 

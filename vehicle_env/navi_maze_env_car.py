@@ -173,7 +173,7 @@ class NAVI_ENV(object):
 
             r_obs = 0.
 
-        r_live = 1.
+        r_live = 0.
 
         if self.dist < self.terminal:
 
