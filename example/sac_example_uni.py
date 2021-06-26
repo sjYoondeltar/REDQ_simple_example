@@ -9,7 +9,8 @@ import math
 from rl_agent.sac import SACAgent
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
-
+RENDER = False
+TRAIN = True
 
 
 if __name__ == '__main__':
@@ -48,8 +49,6 @@ if __name__ == '__main__':
 
         x, target = env.reset()
 
-        print(env.target)
-
         while not env.t_max_reach and not done:
 
             u = np.random.randn(2).reshape([-1, 1])
@@ -59,6 +58,8 @@ if __name__ == '__main__':
 
             print(xn)
 
-            env.render()
+            if RENDER:
+                
+                env.render()
 
             x = xn

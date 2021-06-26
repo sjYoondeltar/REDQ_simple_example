@@ -154,7 +154,8 @@ class SACAgent(object):
         lr_a=3e-4,
         lr_c=3e-4,
         lr_alpha=1e-4,
-        train_alpha=True
+        train_alpha=True,
+        exploration_step=5000
         ):
         super().__init__()
 
@@ -166,6 +167,7 @@ class SACAgent(object):
         self.gamma = gamma
         self.n_step = n_step
         self.tau = tau
+        self.exploration_step = exploration_step
 
         use_cuda = torch.cuda.is_available()
         self.device = torch.device('cuda' if use_cuda else 'cpu')
@@ -201,6 +203,8 @@ class SACAgent(object):
 
             self.alpha = 0.2
 
+        self.sample_enough = False
+
     def hard_target_update(self):
 
         self.target_critic.load_state_dict(self.critic.state_dict())
@@ -226,7 +230,16 @@ class SACAgent(object):
     def push_samples(self, state, action, reward, next_state, mask):
         
         self.buffer.push((state, action, reward, next_state, mask))
-                
+        
+        if self.n_step==1:
+            
+            self.sample_enough = True if len(self.buffer.memory) > self.exploration_step else False
+            
+        else:
+
+            self.sample_enough = True if len(self.buffer.main_buffer.memory) > self.exploration_step else False
+            
+            
     def train_model(self):
 
         if self.n_step==1:
