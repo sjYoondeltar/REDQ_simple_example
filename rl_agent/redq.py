@@ -17,24 +17,21 @@ class Actor(nn.Module):
 
         self.fc1 = nn.Linear(state_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, hidden_size)
+        self.fc3 = nn.Linear(hidden_size, action_size)
         self.fc4 = nn.Linear(hidden_size, action_size)
-        self.fc5 = nn.Linear(hidden_size, action_size)
 
         self.fc_module=nn.Sequential(
             self.fc1,
             nn.SELU(inplace=True),
             self.fc2,
-            nn.SELU(inplace=True),
-            self.fc3,
             nn.SELU(inplace=True)
         )
         
     def forward(self, x):
 
         x = self.fc_module(x)
-        mu = self.fc4(x)
-        log_std = self.fc5(x)
+        mu = self.fc3(x)
+        log_std = self.fc4(x)
         
         log_std = torch.clamp(log_std, min=self.log_std_min, max=self.log_std_max)
         std = 2*torch.exp(log_std)
@@ -50,15 +47,12 @@ class Critic(nn.Module):
         # Q1 architecture
         self.fc1 = nn.Linear(state_size + action_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, hidden_size)
-        self.fc4 = nn.Linear(hidden_size, 1)
+        self.fc3 = nn.Linear(hidden_size, 1)
         
         self.fc_module1=nn.Sequential(
             self.fc1,
             nn.SELU(inplace=True),
             self.fc2,
-            nn.SELU(inplace=True),
-            self.fc3,
             nn.SELU(inplace=True)
         )
 
@@ -67,7 +61,7 @@ class Critic(nn.Module):
 
         x1 = self.fc_module1(x)
 
-        q_value1 = self.fc4(x1)
+        q_value1 = self.fc3(x1)
 
         return q_value1
 
