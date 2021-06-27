@@ -13,7 +13,7 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 RENDER = False
 TRAIN = True
 LOAD_MODEL = False
-MAX_EPISODE = 500
+MAX_EPISODE = 200
 
 
 if __name__ == '__main__':

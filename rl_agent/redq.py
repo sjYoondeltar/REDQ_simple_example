@@ -363,7 +363,7 @@ class REDQAgent(object):
     
             for i in range(self.N):
 
-                self.critic_list[i].load_state_dict(torch.load(os.path.join(load_path, f"redq_critic_{i:2}_best.pth")))
+                self.critic_list[i].load_state_dict(torch.load(os.path.join(load_path, f"redq_critic_{i}_best.pth")))
 
             self.actor.load_state_dict(torch.load(os.path.join(load_path, "redq_actor_best.pth")))
             
@@ -371,6 +371,6 @@ class REDQAgent(object):
         
             for i in range(self.N):
 
-                self.critic_list[i].load_state_dict(torch.load(os.path.join(load_path, f"redq_critic_{i:2}_end.pth")))
-                
+                self.critic_list[i].load_state_dict(torch.load(os.path.join(load_path, f"redq_critic_{i}_end.pth")))
+
             self.actor.load_state_dict(torch.load(os.path.join(load_path, "redq_actor_end.pth")))
