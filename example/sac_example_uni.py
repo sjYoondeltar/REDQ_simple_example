@@ -102,6 +102,8 @@ if __name__ == '__main__':
         mission_results = 'success!' if env.reach else 'fail'
         progress_status = 'train...' if agent.sample_enough else 'explore'
 
+        recorder.push((steps_ep, float(agent.sample_enough)))
+
         print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
 
         if np.mean(recent_mission_results) > 0.99:
