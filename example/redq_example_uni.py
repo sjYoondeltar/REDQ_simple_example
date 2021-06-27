@@ -108,6 +108,8 @@ if __name__ == '__main__':
 
             print("save...")
 
+            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
+
             agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
 
             break
@@ -119,3 +121,4 @@ if __name__ == '__main__':
         recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
 
         agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'), False)
+

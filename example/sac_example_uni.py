@@ -110,6 +110,8 @@ if __name__ == '__main__':
 
             print("save...")
 
+            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'sac'))
+
             agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'sac'))
 
             break
