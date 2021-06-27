@@ -343,24 +343,22 @@ class REDQAgent(object):
     
         if is_best:
 
-            torch.save(self.state_dict(), os.path.join(save_path, "redq_best.pth"))
+            torch.save(self.critic.state_dict(), os.path.join(save_path, "redq_critic_best.pth"))
+            torch.save(self.actor.state_dict(), os.path.join(save_path, "redq_actor_best.pth"))
 
         else:
             
-            torch.save(self.state_dict(), os.path.join(save_path, "redq_end.pth"))
+            torch.save(self.critic.state_dict(), os.path.join(save_path, "redq_critic_end.pth"))
+            torch.save(self.actor.state_dict(), os.path.join(save_path, "redq_actor_end.pth"))
 
     def load_model(self, load_path, is_best=True):
         
         if is_best:
 
-            for params_str in torch.load(os.path.join(load_path, "redq_best.pth")):
-                print(params_str)
-                
-            self.load_state_dict(torch.load(os.path.join(load_path, "redq_best.pth")))
-
+            self.critic.load_state_dict(torch.load(os.path.join(load_path, "redq_critic_best.pth")))
+            self.actor.load_state_dict(torch.load(os.path.join(load_path, "redq_actor_best.pth")))
+            
         else:
 
-            for params_str in torch.load(os.path.join(load_path, "redq_end.pth")):
-                print(params_str)
-                
-            self.load_state_dict(torch.load(os.path.join(load_path, "redq_end.pth")))
+            self.critic.load_state_dict(torch.load(os.path.join(load_path, "redq_critic_end.pth")))
+            self.actor.load_state_dict(torch.load(os.path.join(load_path, "redq_actor_end.pth")))
