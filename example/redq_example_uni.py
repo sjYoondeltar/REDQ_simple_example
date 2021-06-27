@@ -1,5 +1,5 @@
 import sys
-
+import os
 import ray
 import datetime
 import time
@@ -11,6 +11,7 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 RENDER = False
 TRAIN = True
+LOAD_MODEL = False
 MAX_EPISODE = 500
 
 
@@ -46,6 +47,10 @@ if __name__ == '__main__':
         buffer_size=2**14,
         minibatch_size=128,
     )
+
+    if LOAD_MODEL:
+
+        agent.load_model(os.path.join(os.getcwd(), 'savefile', 'redq'))
 
     recent_mission_results = []
         
@@ -95,5 +100,9 @@ if __name__ == '__main__':
         print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
 
         if np.mean(recent_mission_results) > 0.99:
+
+            print("save...")
+
+            agent.save_model(os.path.join(os.getcwd(), 'savefile', 'redq'))
 
             break
