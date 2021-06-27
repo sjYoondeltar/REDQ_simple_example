@@ -337,3 +337,14 @@ class REDQAgent(object):
         else:
 
             pass
+    
+    def save_model(self, save_path):
+
+        torch.save(self.state_dict(), os.path.join(save_path, "sac.pth"))
+
+    def load_model(self, load_path):
+        
+        for params_str in torch.load(os.path.join(load_path, "sac.pth")):
+            print(params_str)
+            
+        self.load_state_dict(torch.load(os.path.join(load_path, "sac.pth")))
