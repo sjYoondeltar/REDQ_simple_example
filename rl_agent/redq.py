@@ -8,6 +8,7 @@ import os
 import math
 from torch.distributions import Normal
 
+
 class Actor(nn.Module):
     def __init__(self, state_size, action_size, hidden_size, log_std_min=-20, log_std_max=10):
         super().__init__()
@@ -338,13 +339,28 @@ class REDQAgent(object):
 
             pass
     
-    def save_model(self, save_path):
+    def save_model(self, save_path, is_best=True):
+    
+        if is_best:
 
-        torch.save(self.state_dict(), os.path.join(save_path, "sac.pth"))
+            torch.save(self.state_dict(), os.path.join(save_path, "redq_best.pth"))
 
-    def load_model(self, load_path):
-        
-        for params_str in torch.load(os.path.join(load_path, "sac.pth")):
-            print(params_str)
+        else:
             
-        self.load_state_dict(torch.load(os.path.join(load_path, "sac.pth")))
+            torch.save(self.state_dict(), os.path.join(save_path, "redq_end.pth"))
+
+    def load_model(self, load_path, is_best=True):
+        
+        if is_best:
+
+            for params_str in torch.load(os.path.join(load_path, "redq_best.pth")):
+                print(params_str)
+                
+            self.load_state_dict(torch.load(os.path.join(load_path, "redq_best.pth")))
+
+        else:
+
+            for params_str in torch.load(os.path.join(load_path, "redq_end.pth")):
+                print(params_str)
+                
+            self.load_state_dict(torch.load(os.path.join(load_path, "redq_end.pth")))

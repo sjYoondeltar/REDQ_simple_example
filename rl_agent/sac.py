@@ -8,6 +8,7 @@ import os
 import math
 from torch.distributions import Normal
 
+
 class Actor(nn.Module):
     def __init__(self, state_size, action_size, hidden_l_size, log_std_min=-20, log_std_max=10):
         super().__init__()
@@ -137,6 +138,7 @@ class SACAgent(object):
         state_size,
         action_size,
         hidden_size,
+        save_path,
         buffer_size=2**13,
         minibatch_size=256,
         gamma=0.99,
@@ -146,7 +148,7 @@ class SACAgent(object):
         lr_c=3e-4,
         lr_alpha=1e-4,
         train_alpha=True,
-        exploration_step=5000
+        exploration_step=5000,
         ):
         super().__init__()
 
@@ -320,14 +322,28 @@ class SACAgent(object):
 
             pass
     
-    def save_model(self, save_path):
-        
-        torch.save(self.state_dict(), os.path.join(save_path, "sac.pth"))
+    def save_model(self, save_path, is_best=True):
+    
+        if is_best:
 
-    def load_model(self, load_path):
+            torch.save(self.state_dict(), os.path.join(save_path, "sac_best.pth"))
 
-        for params_str in torch.load(os.path.join(load_path, "sac.pth")):
+        else:
             
-            print(params_str)
+            torch.save(self.state_dict(), os.path.join(save_path, "sac_end.pth"))
 
-        self.load_state_dict(torch.load(os.path.join(load_path, "sac.pth")))
+    def load_model(self, load_path, is_best=True):
+        
+        if is_best:
+
+            for params_str in torch.load(os.path.join(load_path, "sac_best.pth")):
+                print(params_str)
+                
+            self.load_state_dict(torch.load(os.path.join(load_path, "sac_best.pth")))
+
+        else:
+
+            for params_str in torch.load(os.path.join(load_path, "sac_end.pth")):
+                print(params_str)
+                
+            self.load_state_dict(torch.load(os.path.join(load_path, "sac_end.pth")))

@@ -7,6 +7,7 @@ import numpy as np
 import math
 
 from rl_agent.sac import SACAgent
+from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 RENDER = False
@@ -52,6 +53,8 @@ if __name__ == '__main__':
 
         agent.load_model(os.path.join(os.getcwd(), 'savefile', 'sac'))
 
+    recorder = Rewardrecorder()
+    
     recent_mission_results = []
         
     for eps in range(MAX_EPISODE):
@@ -108,3 +111,9 @@ if __name__ == '__main__':
             agent.save_model(os.path.join(os.getcwd(), 'savefile', 'sac'))
 
             break
+
+    print("end...")
+
+    recorder.save(os.path.join(os.getcwd(), 'savefile', 'sac'))
+
+    agent.save_model(os.path.join(os.getcwd(), 'savefile', 'sac'), False)

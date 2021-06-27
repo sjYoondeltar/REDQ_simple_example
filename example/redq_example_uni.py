@@ -7,6 +7,7 @@ import numpy as np
 import math
 
 from rl_agent.redq import REDQAgent
+from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 RENDER = False
@@ -52,6 +53,8 @@ if __name__ == '__main__':
 
         agent.load_model(os.path.join(os.getcwd(), 'savefile', 'redq'))
 
+    recorder = Rewardrecorder()
+
     recent_mission_results = []
         
     for eps in range(MAX_EPISODE):
@@ -87,7 +90,7 @@ if __name__ == '__main__':
             x = xn
 
             steps_ep += 1
-        
+
         recent_mission_results.append(float(env.reach))
 
         if len(recent_mission_results)>5:
@@ -96,6 +99,8 @@ if __name__ == '__main__':
 
         mission_results = 'success!' if env.reach else 'fail'
         progress_status = 'train...' if agent.sample_enough else 'explore'
+
+        recorder.push((steps_ep, float(agent.sample_enough)))
 
         print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
 
@@ -106,3 +111,9 @@ if __name__ == '__main__':
             agent.save_model(os.path.join(os.getcwd(), 'savefile', 'redq'))
 
             break
+
+    print("end...")
+
+    recorder.save(os.path.join(os.getcwd(), 'savefile', 'redq'))
+
+    agent.save_model(os.path.join(os.getcwd(), 'savefile', 'redq'), False)
