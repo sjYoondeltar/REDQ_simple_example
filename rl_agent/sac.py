@@ -138,7 +138,6 @@ class SACAgent(object):
         state_size,
         action_size,
         hidden_size,
-        save_path,
         buffer_size=2**13,
         minibatch_size=256,
         gamma=0.99,
