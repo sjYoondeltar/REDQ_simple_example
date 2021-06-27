@@ -31,6 +31,7 @@ if __name__ == '__main__':
     target = np.array([16, -16]).reshape([-1, 1])
 
     env = NAVI_ENV(
+        dT=0.1,
         x_init=[-16.0, 16.0, 0],
         u_min=[0, -np.pi/6],
         u_max=[2, np.pi/6],
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 
             steer = agent.get_action(x, TRAIN)
 
-            u = np.array([1, np.pi*steer[0][0]/6]).reshape([-1, 1])
+            u = np.array([2, np.pi*steer[0][0]/6]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
