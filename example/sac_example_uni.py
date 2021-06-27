@@ -35,8 +35,8 @@ if __name__ == '__main__':
     env = NAVI_ENV(
         dT=0.1,
         x_init=[-16.0, 16.0, 0],
-        u_min=[0, -np.pi/6],
-        u_max=[2, np.pi/6],
+        u_min=[0, -np.pi/3],
+        u_max=[2, np.pi/3],
         reward_type='polar',
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
             steer = agent.get_action(x, TRAIN)
 
-            u = np.array([1.5, np.pi*steer[0][0]/6]).reshape([-1, 1])
+            u = np.array([1.5, np.pi*steer[0][0]/3]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
