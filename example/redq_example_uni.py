@@ -112,8 +112,10 @@ if __name__ == '__main__':
 
             break
 
-    print("end...")
+    if np.mean(recent_mission_results) <= 0.99:
 
-    recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
+        print("end...")
 
-    agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'), False)
+        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
+
+        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'), False)
