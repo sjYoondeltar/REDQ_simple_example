@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
     if LOAD_MODEL:
 
-        agent.load_model(os.path.join(os.getcwd(), 'savefile', 'sac'))
+        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', 'sac'))
 
     recorder = Rewardrecorder()
     
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
             steer = agent.get_action(x, TRAIN)
 
-            u = np.array([2, np.pi*steer[0][0]/6]).reshape([-1, 1])
+            u = np.array([1.5, np.pi*steer[0][0]/6]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
@@ -110,12 +110,12 @@ if __name__ == '__main__':
 
             print("save...")
 
-            agent.save_model(os.path.join(os.getcwd(), 'savefile', 'sac'))
+            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'sac'))
 
             break
 
     print("end...")
 
-    recorder.save(os.path.join(os.getcwd(), 'savefile', 'sac'))
+    recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'sac'))
 
-    agent.save_model(os.path.join(os.getcwd(), 'savefile', 'sac'), False)
+    agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'sac'), False)
