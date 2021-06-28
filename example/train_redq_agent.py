@@ -7,7 +7,7 @@ import numpy as np
 import math
 import argparse
 
-from rl_agent.sac import REDQAgent
+from rl_agent.redq import REDQAgent
 from rl_agent.utils import Rewardrecorder, infer
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
