@@ -22,7 +22,7 @@ def main_plot():
     
     ax1 = fig.add_subplot(1, 1, 1)
     
-    ax1.plot(sac_data[:, 0], label="soft actor critic")
+    ax1.plot(sac_data[:, 0], label="Soft Actor Critic")
     
     ax1.plot(redq_data[:, 0], label="REDQ")
     
@@ -30,7 +30,7 @@ def main_plot():
     
     ax1.set_xlabel("episode")
     
-    ax1.set_xlim([0, 200])
+    ax1.set_xlim([0, 100])
 
     ax1.grid()
 

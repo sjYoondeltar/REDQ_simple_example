@@ -10,9 +10,9 @@ from rl_agent.redq import REDQAgent
 from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
-RENDER = True
-TRAIN = False
-LOAD_MODEL = True
+RENDER = False
+TRAIN = True
+LOAD_MODEL = False
 MAX_EPISODE = 200
 
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
         recent_mission_results.append(float(env.reach))
 
-        if len(recent_mission_results)>5:
+        if len(recent_mission_results)>10:
 
             recent_mission_results.pop(0)
 
