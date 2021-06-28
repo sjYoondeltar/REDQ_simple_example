@@ -7,15 +7,15 @@ import numpy as np
 import math
 import argparse
 
-from rl_agent.sac import SACAgent
+from rl_agent.sac import REDQAgent
 from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
-def train(env, agent, args):
+def train(env, agent, model_type, args):
 
     if args.load:
 
-        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
+        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
 
     recorder = Rewardrecorder()
     
@@ -49,7 +49,7 @@ def train(env, agent, args):
 
             agent.push_samples(x, steer, r, xn, mask)
 
-            agent.train_model(G)
+            agent.train_model()
 
             x = xn
 
@@ -72,9 +72,9 @@ def train(env, agent, args):
 
             print("save...")
 
-            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
+            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
 
-            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
+            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
 
             break
 
@@ -82,15 +82,15 @@ def train(env, agent, args):
 
         print("end...")
 
-        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
+        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
 
-        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo), False)
+        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type), False)
 
 
 
-def infer(env, agent, args):
+def infer(env, agent, model_type, args):
 
-    agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
+    agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
 
     recent_mission_results = []
         
@@ -140,9 +140,6 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
 
-    parser.add_argument('--algo', type=str, default='redq', 
-                        help='select an algorithm between redq and sac (default: redq)')
-
     parser.add_argument('--infer_only', action='store_true', default=False,
                         help='do not train the agent in the environment')
 
@@ -185,7 +182,7 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
 
-    agent = SACAgent(
+    agent = REDQAgent(
         state_size=9,
         action_size=1,
         hidden_size=64,
@@ -194,13 +191,11 @@ if __name__ == '__main__':
         exploration_step=3000
     )
 
-    G = 1
-
-    model_type = 'sac' if G==1 else f'sac_g{G}'
+    model_type = 'redq'
 
     if not args.infer_only:
 
-        train(env, agent, args)
+        train(env, agent, model_type, args)
 
-    infer(env, agent, args)
+    infer(env, agent, model_type, args)
 
