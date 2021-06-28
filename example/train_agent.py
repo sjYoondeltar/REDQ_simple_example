@@ -143,8 +143,8 @@ if __name__ == '__main__':
     parser.add_argument('--algo', type=str, default='redq', 
                         help='select an algorithm between redq and sac (default: redq)')
 
-    parser.add_argument('--not_train', action='store_false', default=True,
-                        help='train the agent in the environment')
+    parser.add_argument('--infer_only', action='store_true', default=False,
+                        help='do not train the agent in the environment')
 
     parser.add_argument('--load', action='store_true', default=False,
                         help='copy & paste the saved model name, and load it')
@@ -198,7 +198,7 @@ if __name__ == '__main__':
 
     model_type = 'sac' if G==1 else f'sac_g{G}'
 
-    if not args.not_train:
+    if not args.infer_only:
 
         train(env, agent, args)
 
