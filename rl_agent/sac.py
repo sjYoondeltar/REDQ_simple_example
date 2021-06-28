@@ -209,7 +209,14 @@ class SACAgent(object):
     
         mu, std = self.actor(torch.Tensor(states).to(self.device))
 
-        normal = Normal(mu, std)
+        if is_training:
+            
+            normal = Normal(mu, std)
+        
+        else:
+
+            normal = Normal(mu, 0.001)
+        
         z = normal.rsample() # reparameterization trick (mean + std * N(0,1))
         action = torch.tanh(z)
 

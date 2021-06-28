@@ -10,9 +10,9 @@ from rl_agent.redq import REDQAgent
 from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
-RENDER = False
-TRAIN = True
-LOAD_MODEL = False
+RENDER = True
+TRAIN = False
+LOAD_MODEL = True
 MAX_EPISODE = 200
 
 

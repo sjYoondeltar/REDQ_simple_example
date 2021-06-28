@@ -209,7 +209,14 @@ class REDQAgent(object):
     
         mu, std = self.actor(torch.Tensor(states).to(self.device))
 
-        normal = Normal(mu, std)
+        if is_training:
+            
+            normal = Normal(mu, std)
+        
+        else:
+
+            normal = Normal(mu, 0.001)
+        
         z = normal.rsample() # reparameterization trick (mean + std * N(0,1))
         action = torch.tanh(z)
 
@@ -345,7 +352,7 @@ class REDQAgent(object):
 
             for i in range(self.N):
                 
-                torch.save(self.critic_list[i].state_dict(), os.path.join(save_path, f"redq_critic_{i:2}_best.pth"))
+                torch.save(self.critic_list[i].state_dict(), os.path.join(save_path, f"redq_critic_{i}_best.pth"))
             
             torch.save(self.actor.state_dict(), os.path.join(save_path, "redq_actor_best.pth"))
 
@@ -353,7 +360,7 @@ class REDQAgent(object):
 
             for i in range(self.N):
                 
-                torch.save(self.critic_list[i].state_dict(), os.path.join(save_path, f"redq_critic_{i:2}_end.pth"))
+                torch.save(self.critic_list[i].state_dict(), os.path.join(save_path, f"redq_critic_{i}_end.pth"))
             
             torch.save(self.actor.state_dict(), os.path.join(save_path, "redq_actor_end.pth"))
 
@@ -366,7 +373,6 @@ class REDQAgent(object):
                 self.critic_list[i].load_state_dict(torch.load(os.path.join(load_path, f"redq_critic_{i}_best.pth")))
 
             self.actor.load_state_dict(torch.load(os.path.join(load_path, "redq_actor_best.pth")))
-            
         else:
         
             for i in range(self.N):
