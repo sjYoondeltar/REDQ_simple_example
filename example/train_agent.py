@@ -11,18 +11,17 @@ from rl_agent.sac import SACAgent
 from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
+def train(env, agent, args):
 
-def train(env, agent, agent_type, RENDER, LOAD_MODEL):
+    if args.load:
 
-    if LOAD_MODEL:
-
-        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', agent_type))
+        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
 
     recorder = Rewardrecorder()
     
     recent_mission_results = []
         
-    for eps in range(MAX_TRAIN_EPISODE):
+    for eps in range(args.max_train_eps):
         
         done = False
 
@@ -36,7 +35,7 @@ def train(env, agent, agent_type, RENDER, LOAD_MODEL):
 
         while not env.t_max_reach and not done:
 
-            steer = agent.get_action(x, TRAIN)
+            steer = agent.get_action(x, True)
 
             u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
@@ -44,7 +43,7 @@ def train(env, agent, agent_type, RENDER, LOAD_MODEL):
 
             mask = 0 if done else 1
 
-            if RENDER:
+            if args.render:
                 
                 env.render()
 
@@ -73,9 +72,9 @@ def train(env, agent, agent_type, RENDER, LOAD_MODEL):
 
             print("save...")
 
-            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', agent_type))
+            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
 
-            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', agent_type))
+            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
 
             break
 
@@ -83,19 +82,19 @@ def train(env, agent, agent_type, RENDER, LOAD_MODEL):
 
         print("end...")
 
-        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', agent_type))
+        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
 
-        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', agent_type), False)
+        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo), False)
 
 
 
-def infer(env, agent, agent_type):
+def infer(env, agent, args):
 
-    agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', agent_type))
+    agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', args.algo))
 
     recent_mission_results = []
         
-    for eps in range(MAX_TRAIN_EPISODE):
+    for eps in range(args.max_infer_eps):
         
         done = False
 
@@ -109,7 +108,7 @@ def infer(env, agent, agent_type):
 
         while not env.t_max_reach and not done:
 
-            steer = agent.get_action(x, TRAIN)
+            steer = agent.get_action(x, False)
 
             u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
@@ -117,7 +116,7 @@ def infer(env, agent, agent_type):
 
             mask = 0 if done else 1
 
-            if RENDER:
+            if args.render:
                 
                 env.render()
 
@@ -139,11 +138,28 @@ def infer(env, agent, agent_type):
 
 if __name__ == '__main__':
 
-    RENDER = False
-    TRAIN = True
-    LOAD_MODEL = False
-    MAX_TRAIN_EPISODE = 200
-    MAX_INFER_EPISODE = 10
+    parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
+
+    parser.add_argument('--algo', type=str, default='redq', 
+                        help='select an algorithm between redq and sac (default: redq)')
+
+    parser.add_argument('--not_train', action='store_false', default=True,
+                        help='train the agent in the environment')
+
+    parser.add_argument('--load', action='store_true', default=False,
+                        help='copy & paste the saved model name, and load it')
+
+    parser.add_argument('--max_train_eps', type=int, default=200,
+                        help='maximum number of episodes for training (default: 200)')
+
+    parser.add_argument('--max_infer_eps', type=int, default=5,
+                        help='maximum number of episodes for inference (default: 5)')
+
+    parser.add_argument('--render', action='store_true', default=False,
+                        help='render the environment on training or inference')
+
+    args = parser.parse_args()
+
 
     obs_list =[
         [-12.0, 8.0, 16.0, 8.0],
@@ -182,11 +198,9 @@ if __name__ == '__main__':
 
     model_type = 'sac' if G==1 else f'sac_g{G}'
 
-    if TRAIN:
+    if not args.not_train:
 
-        train(env, agent, model_type)
+        train(env, agent, args)
 
-    else:
-
-        infer(env, agent, model_type)
+    infer(env, agent, args)
 
