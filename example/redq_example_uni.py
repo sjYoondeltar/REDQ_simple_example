@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
         print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
 
-        if np.mean(recent_mission_results) > 0.99:
+        if np.mean(recent_mission_results) > 0.99 and TRAIN:
 
             print("save...")
 
@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
             break
 
-    if np.mean(recent_mission_results) <= 0.99:
+    if np.mean(recent_mission_results) <= 0.99 and TRAIN:
 
         print("end...")
 
