@@ -8,7 +8,7 @@ import math
 import argparse
 
 from rl_agent.sac import SACAgent
-from rl_agent.utils import Rewardrecorder
+from rl_agent.utils import Rewardrecorder, infer
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 def train(env, agent, model_type, args):
@@ -34,7 +34,7 @@ def train(env, agent, model_type, args):
             agent.buffer.memory = []
 
         while not env.t_max_reach and not done:
-
+            
             steer = agent.get_action(x, True)
 
             u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
@@ -87,55 +87,6 @@ def train(env, agent, model_type, args):
         agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type), False)
 
 
-
-def infer(env, agent, model_type, args):
-
-    agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
-
-    recent_mission_results = []
-        
-    for eps in range(args.max_infer_eps):
-        
-        done = False
-
-        x, target = env.reset()
-
-        steps_ep=0
-
-        if agent.n_step>1:
-
-            agent.buffer.memory = []
-
-        while not env.t_max_reach and not done:
-
-            steer = agent.get_action(x, False)
-
-            u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
-
-            xn, r, done = env.step(u)
-
-            mask = 0 if done else 1
-
-            if args.render:
-                
-                env.render()
-
-            x = xn
-
-            steps_ep += 1
-        
-        recent_mission_results.append(float(env.reach))
-
-        if len(recent_mission_results)>10:
-
-            recent_mission_results.pop(0)
-
-        mission_results = 'success!' if env.reach else 'fail'
-        progress_status = 'train...' if agent.sample_enough else 'explore'
-        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
-
-
-
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
@@ -151,6 +102,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--max_infer_eps', type=int, default=5,
                         help='maximum number of episodes for inference (default: 5)')
+
+    parser.add_argument('--critic_gradient_steps', type=int, default=1,
+                        help='maximum number of episodes for inference (default: 1)')
 
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
@@ -191,7 +145,7 @@ if __name__ == '__main__':
         exploration_step=3000
     )
 
-    G = 1
+    G = args.critic_gradient_steps
 
     model_type = 'sac' if G==1 else f'sac_g{G}'
 
