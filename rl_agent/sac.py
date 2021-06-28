@@ -299,6 +299,8 @@ class SACAgent(object):
                 critic_loss.backward()
                 self.critic_optimizer.step()
 
+                self.soft_target_update()
+
             # update actor
             policy, log_policy = self.eval_action(states)
             
@@ -323,8 +325,6 @@ class SACAgent(object):
                 self.alpha_optimizer.step()
 
                 self.alpha = torch.exp(self.log_alpha) 
-
-            self.soft_target_update()
             
         else:
 
