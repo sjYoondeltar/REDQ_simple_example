@@ -249,53 +249,55 @@ class SACAgent(object):
             self.sample_enough = True if len(self.buffer.main_buffer.memory) > self.exploration_step else False
             
             
-    def train_model(self):
+    def train_model(self, G=1):
 
         if self.sample_enough:
 
-            if self.n_step==1:
+            for _ in range(G):
+
+                if self.n_step==1:
+                    
+                    mini_batch = self.buffer.sample(self.minibatch_size)
                 
-                mini_batch = self.buffer.sample(self.minibatch_size)
-            
-            else:
-            
-                mini_batch = self.buffer.main_buffer.sample(self.minibatch_size)
-            
-            mini_batch = np.array(mini_batch)
-            states = np.vstack(mini_batch[:, 0])
-            actions = list(mini_batch[:, 1])
-            rewards = list(mini_batch[:, 2])
-            next_states = np.vstack(mini_batch[:, 3])
-            masks = list(mini_batch[:, 4])
+                else:
+                
+                    mini_batch = self.buffer.main_buffer.sample(self.minibatch_size)
+                
+                mini_batch = np.array(mini_batch)
+                states = np.vstack(mini_batch[:, 0])
+                actions = list(mini_batch[:, 1])
+                rewards = list(mini_batch[:, 2])
+                next_states = np.vstack(mini_batch[:, 3])
+                masks = list(mini_batch[:, 4])
 
-            actions = torch.Tensor(actions).detach().to(self.device).squeeze(1)
-            rewards = torch.Tensor(rewards).to(self.device)
-            masks = torch.Tensor(masks).to(self.device)
+                actions = torch.Tensor(actions).detach().to(self.device).squeeze(1)
+                rewards = torch.Tensor(rewards).to(self.device)
+                masks = torch.Tensor(masks).to(self.device)
 
-            criterion = torch.nn.MSELoss()
-            
-            q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), actions)
-            
-            next_policy, next_log_policy = self.eval_action(next_states)
-            
-            target_next_q_value1, target_next_q_value2 = self.target_critic(torch.Tensor(next_states).to(self.device), next_policy)
-            
-            min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
+                criterion = torch.nn.MSELoss()
+                
+                q_value1, q_value2 = self.critic(torch.Tensor(states).to(self.device), actions)
+                
+                next_policy, next_log_policy = self.eval_action(next_states)
+                
+                target_next_q_value1, target_next_q_value2 = self.target_critic(torch.Tensor(next_states).to(self.device), next_policy)
+                
+                min_target_next_q_value = torch.min(target_next_q_value1, target_next_q_value2)
 
-            if self.train_alpha:
-                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(self.device) * next_log_policy.squeeze(1)
-            else:
-                min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha * next_log_policy.squeeze(1)
+                if self.train_alpha:
+                    min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha.to(self.device) * next_log_policy.squeeze(1)
+                else:
+                    min_target_next_q_value = min_target_next_q_value.squeeze(1) - self.alpha * next_log_policy.squeeze(1)
 
-            if self.n_step == 1:
-                target = rewards + masks * self.gamma * min_target_next_q_value
-            else:
-                target = rewards + masks * (self.gamma**self.n_step) * min_target_next_q_value
+                if self.n_step == 1:
+                    target = rewards + masks * self.gamma * min_target_next_q_value
+                else:
+                    target = rewards + masks * (self.gamma**self.n_step) * min_target_next_q_value
 
-            critic_loss = criterion(q_value2.squeeze(1), target.detach()) + criterion(q_value1.squeeze(1), target.detach()) 
-            self.critic_optimizer.zero_grad()
-            critic_loss.backward()
-            self.critic_optimizer.step()
+                critic_loss = criterion(q_value2.squeeze(1), target.detach()) + criterion(q_value1.squeeze(1), target.detach()) 
+                self.critic_optimizer.zero_grad()
+                critic_loss.backward()
+                self.critic_optimizer.step()
 
             # update actor
             policy, log_policy = self.eval_action(states)

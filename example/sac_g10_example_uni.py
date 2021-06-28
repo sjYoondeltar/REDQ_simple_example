@@ -6,7 +6,7 @@ import time
 import numpy as np
 import math
 
-from rl_agent.redq import REDQAgent
+from rl_agent.sac import SACAgent
 from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
@@ -15,8 +15,9 @@ TRAIN = True
 LOAD_MODEL = False
 MAX_EPISODE = 200
 
-
 if __name__ == '__main__':
+
+    G = 10
 
     obs_list =[
         [-12.0, 8.0, 16.0, 8.0],
@@ -42,7 +43,7 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
 
-    agent = REDQAgent(
+    agent = SACAgent(
         state_size=9,
         action_size=1,
         hidden_size=64,
@@ -53,10 +54,10 @@ if __name__ == '__main__':
 
     if LOAD_MODEL:
 
-        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
+        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', 'sac_g10'))
 
     recorder = Rewardrecorder()
-
+    
     recent_mission_results = []
         
     for eps in range(MAX_EPISODE):
@@ -87,12 +88,14 @@ if __name__ == '__main__':
 
             agent.push_samples(x, steer, r, xn, mask)
 
-            agent.train_model()
+            if TRAIN:
+
+                agent.train_model(G=1)
 
             x = xn
 
             steps_ep += 1
-
+        
         recent_mission_results.append(float(env.reach))
 
         if len(recent_mission_results)>10:
@@ -110,9 +113,9 @@ if __name__ == '__main__':
 
             print("save...")
 
-            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
+            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'sac_g10'))
 
-            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
+            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'sac_g10'))
 
             break
 
@@ -120,7 +123,6 @@ if __name__ == '__main__':
 
         print("end...")
 
-        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'))
+        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', 'sac_g10'))
 
-        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'redq'), False)
-
+        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', 'sac_g10'), False)

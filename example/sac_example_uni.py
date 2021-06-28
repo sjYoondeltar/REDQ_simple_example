@@ -47,6 +47,7 @@ if __name__ == '__main__':
         hidden_size=64,
         buffer_size=2**14,
         minibatch_size=128,
+        exploration_step=2000
     )
 
     if LOAD_MODEL:
