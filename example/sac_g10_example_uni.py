@@ -49,7 +49,7 @@ if __name__ == '__main__':
         hidden_size=64,
         buffer_size=2**14,
         minibatch_size=128,
-        exploration_step=2000
+        exploration_step=3000
     )
 
     if LOAD_MODEL:
@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
             steer = agent.get_action(x, TRAIN)
 
-            u = np.array([2, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
+            u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
