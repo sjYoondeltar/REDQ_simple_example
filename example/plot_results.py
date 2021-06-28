@@ -30,7 +30,7 @@ def main_plot():
     
     ax1.set_xlabel("episode")
     
-    ax1.set_xlim([0, 100])
+    ax1.set_xlim([0, 50])
 
     ax1.grid()
 

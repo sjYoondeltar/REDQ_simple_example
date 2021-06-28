@@ -10,7 +10,7 @@ from rl_agent.redq import REDQAgent
 from rl_agent.utils import Rewardrecorder
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
-RENDER = False
+RENDER = True
 TRAIN = True
 LOAD_MODEL = False
 MAX_EPISODE = 200
@@ -19,7 +19,8 @@ MAX_EPISODE = 200
 if __name__ == '__main__':
 
     obs_list =[
-        [-4.0, 8.0, 32.0, 8.0],
+        [-12.0, 8.0, 16.0, 8.0],
+        [12.0, 8.0, 16.0, 24.0],
         [4.0, -8.0, 32.0, 8.0]
     ]
     
