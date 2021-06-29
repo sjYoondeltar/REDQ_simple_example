@@ -20,7 +20,7 @@ def main_plot():
 
     redq_data = load_record('redq')
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(20, 10))
     
     ax1 = fig.add_subplot(1, 1, 1)
     
@@ -42,11 +42,11 @@ def main_plot():
 
     ax1.legend()
 
-    plt.show()
+    # plt.show()
 
-    # img_path = os.path.join(os.getcwd(), 'example', 'img')
+    img_path = os.path.join(os.getcwd(), 'example', 'img')
 
-    # plt.savefig(os.path.join(img_path, "comparison.png"))
+    plt.savefig(os.path.join(img_path, "comparison.png"))
 
 
 if __name__ == '__main__':
