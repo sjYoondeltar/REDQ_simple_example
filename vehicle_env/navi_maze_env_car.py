@@ -159,7 +159,7 @@ class NAVI_ENV(object):
 
         if self.wall_contact:
 
-            r_wall = -20.
+            r_wall = -5.
 
         else:
 
@@ -167,7 +167,7 @@ class NAVI_ENV(object):
 
         if self.obs_contact:
 
-            r_obs = -20.
+            r_obs = -5.
 
         else:
 
