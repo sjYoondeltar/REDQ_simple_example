@@ -34,19 +34,19 @@ def main_plot():
     
     ax1.set_xlabel("episode")
     
-    ax1.set_xlim([0, 50])
+    ax1.set_xlim([0, 60])
     
-    ax1.set_ylim([0, 1600])
+    ax1.set_ylim([0, 700])
 
     ax1.grid()
 
     ax1.legend()
 
-    # plt.show()
+    plt.show()
 
-    img_path = os.path.join(os.getcwd(), 'example', 'img')
+    # img_path = os.path.join(os.getcwd(), 'example', 'img')
 
-    plt.savefig(os.path.join(img_path, "comparison.png"))
+    # plt.savefig(os.path.join(img_path, "comparison.png"))
 
 
 if __name__ == '__main__':

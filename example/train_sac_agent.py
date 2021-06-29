@@ -14,7 +14,7 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 def train(env, agent, model_type, args):
     
     H = args.history_window
-
+    
     if args.load:
 
         agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
@@ -112,8 +112,8 @@ if __name__ == '__main__':
     parser.add_argument('--history_window', type=int, default=3,
                         help='history window of observation from environment (default: 3)')
 
-    parser.add_argument('--critic_gradient_steps', type=int, default=1,
-                        help='maximum number of episodes for inference (default: 1)')
+    parser.add_argument('--G', type=int, default=5,
+                        help='critic gradient steps (default: 5)')
 
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         exploration_step=3000
     )
 
-    G = args.critic_gradient_steps
+    G = args.G
 
     model_type = 'sac' if G==1 else f'sac_g{G}'
 

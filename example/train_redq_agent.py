@@ -113,6 +113,9 @@ if __name__ == '__main__':
     parser.add_argument('--history_window', type=int, default=3,
                         help='history window of observation from environment (default: 3)')
 
+    parser.add_argument('--G', type=int, default=5,
+                        help='critic gradient steps (default: 5)')
+
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
 
@@ -150,7 +153,8 @@ if __name__ == '__main__':
         buffer_size=2**14,
         minibatch_size=256,
         exploration_step=3000,
-        N=5
+        N=5,
+        G=args.G
     )
 
     model_type = 'redq'
