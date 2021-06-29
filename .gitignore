@@ -130,3 +130,6 @@ dmypy.json
 
 # Savefile
 /example/savefile
+
+# Trash
+/repo_trash
