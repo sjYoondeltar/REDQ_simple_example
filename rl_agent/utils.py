@@ -30,6 +30,8 @@ def infer(env, agent, model_type, args):
 
         x, target = env.reset()
 
+        x = np.tile(x, (1, H))
+
         steps_ep=0
 
         if agent.n_step>1:
@@ -43,6 +45,8 @@ def infer(env, agent, model_type, args):
             u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
+
+            xn = np.concatenate([x[:, 9:], xn], axis=1)
 
             mask = 0 if done else 1
 
