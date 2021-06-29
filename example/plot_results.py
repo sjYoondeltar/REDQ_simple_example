@@ -16,7 +16,7 @@ def main_plot():
 
     sac_data = load_record('sac')
 
-    sac_g10_data = load_record('sac_g10')
+    sac_g10_data = load_record('sac_g20')
 
     redq_data = load_record('redq')
 
@@ -26,7 +26,7 @@ def main_plot():
     
     ax1.plot(sac_data[:, 0], label="Soft Actor Critic")
     
-    ax1.plot(sac_g10_data[:, 0], label="Soft Actor Critic with Critic Gradient Steps = 10")
+    ax1.plot(sac_g10_data[:, 0], label="Soft Actor Critic with Critic Gradient Steps = 20")
     
     ax1.plot(redq_data[:, 0], label="REDQ")
     

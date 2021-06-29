@@ -173,7 +173,7 @@ class NAVI_ENV(object):
 
             r_obs = 0.
 
-        r_live = 0.
+        r_live = 1*np.clip(self.sensor.sensor_info[np.floor(self.sensor.n_sensor/2).astype('int'), 0]/self.sensor.sensor_max, 0, 0.5)
 
         if self.dist < self.terminal:
 
@@ -228,7 +228,7 @@ class NAVI_ENV(object):
         vec_aug = np.matmul(self.RT_b, vec_aug)
 
         vec_proj = np.array([vec_aug[0,:]/(vec_aug[2,:]+0.0001), vec_aug[1,:]/(vec_aug[2,:]+0.0001), np.ones((vec.shape[1],))], dtype=np.float32).reshape([3,-1])
-
+        
         vec_proj = np.matmul(self.Pmtx, vec_proj)
 
         return vec_proj[:2, :].astype(np.int32)
