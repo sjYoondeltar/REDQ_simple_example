@@ -13,6 +13,8 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 def train(env, agent, model_type, args):
 
+    H = args.history_window
+    
     if args.load:
 
         agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
@@ -29,6 +31,8 @@ def train(env, agent, model_type, args):
 
         steps_ep=0
 
+        x = np.tile(x, (1, H))
+
         if agent.n_step>1:
 
             agent.buffer.memory = []
@@ -37,9 +41,11 @@ def train(env, agent, model_type, args):
 
             steer = agent.get_action(x, True)
 
-            u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
+            u = np.array([3, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
+
+            xn = np.concatenate([x[:, 9:], xn], axis=1)
 
             mask = 0 if done else 1
 
@@ -104,6 +110,9 @@ if __name__ == '__main__':
     parser.add_argument('--max_infer_eps', type=int, default=5,
                         help='maximum number of episodes for inference (default: 5)')
 
+    parser.add_argument('--history_window', type=int, default=3,
+                        help='history window of observation from environment (default: 3)')
+
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
 
@@ -128,19 +137,20 @@ if __name__ == '__main__':
     env = NAVI_ENV(
         dT=0.1,
         x_init=[-16.0, 16.0, 0],
-        u_min=[0, -np.pi/4],
-        u_max=[2, np.pi/4],
+        u_min=[0, -np.pi/3],
+        u_max=[4, np.pi/3],
         reward_type='polar',
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
 
     agent = REDQAgent(
-        state_size=9,
+        state_size=9*args.history_window,
         action_size=1,
         hidden_size=64,
         buffer_size=2**14,
-        minibatch_size=128,
-        exploration_step=3000
+        minibatch_size=256,
+        exploration_step=3000,
+        N=5
     )
 
     model_type = 'redq'

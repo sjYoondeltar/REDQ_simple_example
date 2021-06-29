@@ -12,6 +12,8 @@ from rl_agent.utils import Rewardrecorder, infer
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 def train(env, agent, model_type, args):
+    
+    H = args.history_window
 
     if args.load:
 
@@ -27,6 +29,8 @@ def train(env, agent, model_type, args):
 
         x, target = env.reset()
 
+        x = np.tile(x, (1, H))
+
         steps_ep=0
 
         if agent.n_step>1:
@@ -37,9 +41,11 @@ def train(env, agent, model_type, args):
             
             steer = agent.get_action(x, True)
 
-            u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
+            u = np.array([3, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
+
+            xn = np.concatenate([x[:, 9:], xn], axis=1)
 
             mask = 0 if done else 1
 
@@ -103,6 +109,9 @@ if __name__ == '__main__':
     parser.add_argument('--max_infer_eps', type=int, default=5,
                         help='maximum number of episodes for inference (default: 5)')
 
+    parser.add_argument('--history_window', type=int, default=3,
+                        help='history window of observation from environment (default: 3)')
+
     parser.add_argument('--critic_gradient_steps', type=int, default=1,
                         help='maximum number of episodes for inference (default: 1)')
 
@@ -130,18 +139,18 @@ if __name__ == '__main__':
     env = NAVI_ENV(
         dT=0.1,
         x_init=[-16.0, 16.0, 0],
-        u_min=[0, -np.pi/4],
-        u_max=[2, np.pi/4],
+        u_min=[0, -np.pi/3],
+        u_max=[4, np.pi/3],
         reward_type='polar',
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
 
     agent = SACAgent(
-        state_size=9,
+        state_size=9*args.history_window,
         action_size=1,
         hidden_size=64,
         buffer_size=2**14,
-        minibatch_size=128,
+        minibatch_size=256,
         exploration_step=3000
     )
 

@@ -17,6 +17,8 @@ class Rewardrecorder:
 
 
 def infer(env, agent, model_type, args):
+    
+    H = args.history_window
 
     agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
 

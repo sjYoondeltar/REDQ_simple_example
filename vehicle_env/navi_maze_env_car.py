@@ -8,7 +8,7 @@ from vehicle_env.sensor_model import SimpleSENSOR
 class NAVI_ENV(object):
 
     def __init__(self, dT=0.05, x_init=[0.0, 0.0, 0], target_fix=None, u_min=[0, -np.pi/6], u_max=[2, np.pi/6],
-                t_max=800, level=1, sensor_max=10, n_sensor=7, range_sensor=[-np.pi/2, np.pi/2],
+                t_max=800, level=1, sensor_max=10, n_sensor=9, range_sensor=[-np.pi/2, np.pi/2],
                 reward_type='cart', obs_list=[[5.0, 5.0, 10.0, 2.0], [5.0, -5.0, 10.0, 2.0]],
                 coef_dis=0.2, coef_angle=1.2, dis_collision=1.0, terminal_cond=2.0):
 
@@ -25,8 +25,8 @@ class NAVI_ENV(object):
         self.t_max_reach = False
 
         self.sensor = SimpleSENSOR(
-            sensor_max=10,
-            n_sensor=9,
+            sensor_max=sensor_max,
+            n_sensor=n_sensor,
             range_sensor=[-2*np.pi/3, 2*np.pi/3]
         )
 
