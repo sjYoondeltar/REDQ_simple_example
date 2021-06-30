@@ -116,7 +116,7 @@ if __name__ == '__main__':
     parser.add_argument('--G', type=int, default=20,
                         help='critic gradient steps (default: 20)')
 
-    parser.add_argument('--N', type=int, default=5,
+    parser.add_argument('--N', type=int, default=10,
                         help='the number of ensemble models (default: 5)')
 
     parser.add_argument('--render', action='store_true', default=False,
