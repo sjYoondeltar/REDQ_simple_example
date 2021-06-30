@@ -134,7 +134,7 @@ if __name__ == '__main__':
         [obs[0]-obs[2]/2, obs[1]+obs[3]/2],
         ] for obs in obs_list])
 
-    target = np.array([16, -16]).reshape([-1, 1])
+    target = np.array([0, -16]).reshape([-1, 1])
 
     env = NAVI_ENV(
         dT=0.1,
