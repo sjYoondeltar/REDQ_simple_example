@@ -55,7 +55,7 @@ def train(env, agent, model_type, args):
 
             agent.push_samples(x, steer, r, xn, mask)
 
-            agent.train_model(G)
+            agent.train_model(args.G)
 
             x = xn
 
