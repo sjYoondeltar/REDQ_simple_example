@@ -6,6 +6,8 @@ import time
 import numpy as np
 import math
 import argparse
+import torch
+import random
 
 from rl_agent.sac import SACAgent
 from rl_agent.utils import Rewardrecorder, infer, train
@@ -37,7 +39,14 @@ if __name__ == '__main__':
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
 
+    parser.add_argument('--seed', type=int, default=1234,
+                        help='the seed number of numpy and torch (default: 1234)')
+
     args = parser.parse_args()
+    
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+    random.seed(args.seed)
 
 
     obs_list =[

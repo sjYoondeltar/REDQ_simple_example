@@ -46,7 +46,7 @@ def main_plot():
 
     img_path = os.path.join(os.getcwd(), 'example', 'img')
 
-    plt.savefig(os.path.join(img_path, "comparison_2.png"))
+    plt.savefig(os.path.join(img_path, "comparison.png"))
 
 
 if __name__ == '__main__':
