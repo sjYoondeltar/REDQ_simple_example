@@ -148,6 +148,7 @@ class SACAgent(object):
         lr_alpha=1e-4,
         train_alpha=True,
         exploration_step=5000,
+        G=1
         ):
         super().__init__()
 
@@ -160,6 +161,7 @@ class SACAgent(object):
         self.n_step = n_step
         self.tau = tau
         self.exploration_step = exploration_step
+        self.G = G
 
         use_cuda = torch.cuda.is_available()
         self.device = torch.device('cuda' if use_cuda else 'cpu')
@@ -255,11 +257,11 @@ class SACAgent(object):
             self.sample_enough = True if len(self.buffer.main_buffer.memory) > self.exploration_step else False
             
             
-    def train_model(self, G=1):
+    def train_model(self):
 
         if self.sample_enough:
 
-            for _ in range(G):
+            for _ in range(self.G):
 
                 if self.n_step==1:
                     

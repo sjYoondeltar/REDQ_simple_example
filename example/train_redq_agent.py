@@ -162,6 +162,10 @@ if __name__ == '__main__':
 
     model_type = 'redq'
 
+    if os.path.isdir(os.path.join(os.getcwd(), 'example', 'savefile', model_type)):
+
+        os.makedirs(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+
     if not args.infer_only:
 
         train(env, agent, model_type, args)

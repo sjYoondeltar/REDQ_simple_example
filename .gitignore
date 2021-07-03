@@ -129,10 +129,7 @@ dmypy.json
 .pyre/
 
 # Savefile
-/example/savefile/redq/*
-/example/savefile/sac/*
-/example/savefile/sac_g10/*
-/example/savefile/sac_g20/*
+/example/savefile
 
 
 # Trash

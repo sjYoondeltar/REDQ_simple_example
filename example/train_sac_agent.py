@@ -151,12 +151,15 @@ if __name__ == '__main__':
         hidden_size=64,
         buffer_size=2**14,
         minibatch_size=256,
-        exploration_step=3000
+        exploration_step=3000,
+        G=args.G
     )
 
-    G = args.G
+    model_type = 'sac' if args.G==1 else f'sac_g{args.G}'
 
-    model_type = 'sac' if G==1 else f'sac_g{G}'
+    if os.path.isdir(os.path.join(os.getcwd(), 'example', 'savefile', model_type)):
+
+        os.makedirs(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
 
     if not args.infer_only:
 
