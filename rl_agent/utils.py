@@ -147,6 +147,5 @@ def infer(env, agent, model_type, args):
             recent_mission_results.pop(0)
 
         mission_results = 'success!' if env.reach else 'fail'
-        progress_status = 'train...' if agent.sample_enough else 'explore'
-        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
+        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results)
 
