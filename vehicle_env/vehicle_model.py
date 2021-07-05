@@ -4,7 +4,7 @@ import itertools
 
 class UNICAR(object):
     
-    def __init__(self, dT=0.05, x_init=[0.0, 0.0, 0], u_min=[0, -np.pi/6], u_max=[2, np.pi/6]):
+    def __init__(self, dT=0.05, x_init=[0.0, 0.0, 0], u_min=[0, -np.pi/6], u_max=[2, np.pi/6], noise_w=[0.1, 0.1]):
         
         self.x_init= np.array(x_init, dtype=np.float32).reshape([-1,1])
 
@@ -13,6 +13,8 @@ class UNICAR(object):
         
         self.u_min = u_min
         self.u_max = u_max
+
+        self.noise_w = noise_w
 
         self.pos_min = [-20.0, -20.0]
         self.pos_max = [20.0, 20.0]
@@ -27,12 +29,12 @@ class UNICAR(object):
 
     def step(self, u):
 
-        u[0, :] = np.clip(u[0, :], self.u_min[0], self.u_max[0])
+        u[0, :] = np.clip(u[0, :] + self.noise_w[0] * np.random.randn(1), self.u_min[0], self.u_max[0])
         u[1, :] = np.clip(u[1, :], self.u_min[1], self.u_max[1])
 
         dx0 = u[0, :]*np.cos(self.x[2, :])
         dx1 = u[0, :]*np.sin(self.x[2, :])
-        dx2 = u[1, :]
+        dx2 = u[1, :] + self.noise_w[1] * np.random.randn(1)
 
         dx_state = np.concatenate([dx0.reshape([-1, 1]), dx1.reshape([-1, 1]),dx2.reshape([-1, 1])], axis=0)
 
