@@ -38,7 +38,9 @@ def train(env, agent, model_type, args):
 
         x, target = env.reset()
 
-        steps_ep=0
+        steps_ep = 0
+
+        cumul_r = 0
 
         x = np.tile(x, (1, H))
 
@@ -80,6 +82,8 @@ def train(env, agent, model_type, args):
             x = xn
 
             steps_ep += 1
+
+            cumul_r += r
         
         recent_mission_results.append(float(env.reach))
 
@@ -90,9 +94,9 @@ def train(env, agent, model_type, args):
         mission_results = 'success!' if env.reach else 'fail'
         progress_status = 'train...' if agent.sample_enough else 'explore'
 
-        recorder.push((steps_ep, float(agent.sample_enough)))
+        recorder.push((steps_ep, float(agent.sample_enough), cumul_r))
 
-        print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results + " | " + progress_status)
+        print('{} episode | live steps : {:.2f} | rewards : {:.2f} | '.format(eps + 1, steps_ep, cumul_r) + mission_results + " | " + progress_status)
 
         if np.mean(recent_mission_results) > 0.99:
 
