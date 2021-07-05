@@ -26,7 +26,7 @@ def train(env, agent, model_type, args):
     
     if args.load:
 
-        agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+        agent.load_model(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type))
 
     recorder = Rewardrecorder()
     
@@ -48,13 +48,24 @@ def train(env, agent, model_type, args):
 
         while not env.t_max_reach and not done:
 
-            steer = agent.get_action(x, True)
+            action = agent.get_action(x, True)
 
-            u = np.array([vel, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
+            if args.task == 'maze':
+
+                u = np.array([vel, env.car.u_max[1]*action[0][0]]).reshape([-1, 1])
+
+            else:
+
+                u = np.array(
+                    [
+                        (env.car.u_max[0] - env.car.u_min[0])/2*action[0][0] + (env.car.u_max[0] + env.car.u_min[0])/2,
+                        env.car.u_max[1]*action[0][1]
+                    ]
+                ).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
-            xn = np.concatenate([x[:, 9:], xn], axis=1)
+            xn = np.concatenate([x[:, int(agent.state_size/H):], xn], axis=1)
 
             mask = 0 if done else 1
 
@@ -62,7 +73,7 @@ def train(env, agent, model_type, args):
                 
                 env.render()
 
-            agent.push_samples(x, steer, r, xn, mask)
+            agent.push_samples(x, action, r, xn, mask)
 
             agent.train_model()
 
@@ -87,9 +98,9 @@ def train(env, agent, model_type, args):
 
             print("save...")
 
-            recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+            recorder.save(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type))
 
-            agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+            agent.save_model(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type))
 
             break
 
@@ -97,9 +108,9 @@ def train(env, agent, model_type, args):
 
         print("end...")
 
-        recorder.save(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+        recorder.save(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type))
 
-        agent.save_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type), False)
+        agent.save_model(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type), False)
 
 
 def infer(env, agent, model_type, args):
@@ -110,7 +121,7 @@ def infer(env, agent, model_type, args):
     
     H = args.history_window
 
-    agent.load_model(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+    agent.load_model(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type))
 
     recent_mission_results = []
         
@@ -130,13 +141,24 @@ def infer(env, agent, model_type, args):
 
         while not env.t_max_reach and not done:
 
-            steer = agent.get_action(x, False)
+            action = agent.get_action(x, False)
 
-            u = np.array([vel, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
+            if args.task == 'maze':
+
+                u = np.array([vel, env.car.u_max[1]*action[0][0]]).reshape([-1, 1])
+
+            else:
+
+                u = np.array(
+                    [
+                        (env.car.u_max[0] - env.car.u_min[0])/2*action[0][0] + (env.car.u_max[0] + env.car.u_min[0])/2,
+                        env.car.u_max[1]*action[0][1]
+                    ]
+                ).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
-            xn = np.concatenate([x[:, 9:], xn], axis=1)
+            xn = np.concatenate([x[:, int(agent.state_size/H):], xn], axis=1)
 
             mask = 0 if done else 1
 

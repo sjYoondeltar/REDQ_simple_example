@@ -17,6 +17,18 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
+    
+    parser.add_argument('--task', type=str, default='maze',
+                        help='type of tasks in the environment')
+
+    parser.add_argument('--infer_only', action='store_true', default=False,
+                        help='do not train the agent in the environment')
+
+    parser.add_argument('--load', action='store_true', default=False,
+                        help='copy & paste the saved model name, and load it')
+
+    parser.add_argument('--max_train_eps', type=int, default=200,
+                        help='maximum number of episodes for training (default: 200)')
 
     parser.add_argument('--max_infer_eps', type=int, default=5,
                         help='maximum number of episodes for inference (default: 5)')
@@ -78,6 +90,14 @@ if __name__ == '__main__':
     )
 
     model_type = 'redq'
+
+    if not os.path.isdir(os.path.join(os.getcwd(), 'example', 'savefile', model_type)):
+
+        os.makedirs(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+
+    if not args.infer_only:
+
+        train(env, agent, model_type, args)
 
     infer(env, agent, model_type, args)
 

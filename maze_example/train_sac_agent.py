@@ -18,6 +18,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
 
+    parser.add_argument('--task', type=str, default='maze',
+                        help='type of tasks in the environment')
+
     parser.add_argument('--infer_only', action='store_true', default=False,
                         help='do not train the agent in the environment')
 

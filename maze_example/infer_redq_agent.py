@@ -9,7 +9,7 @@ import argparse
 import torch
 import random
 
-from rl_agent.sac import SACAgent
+from rl_agent.redq import REDQAgent
 from rl_agent.utils import Rewardrecorder, infer, train
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
@@ -17,6 +17,9 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
+
+    parser.add_argument('--task', type=str, default='maze',
+                        help='type of tasks in the environment')
 
     parser.add_argument('--max_infer_eps', type=int, default=5,
                         help='maximum number of episodes for inference (default: 5)')
@@ -26,6 +29,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--G', type=int, default=20,
                         help='critic gradient steps (default: 20)')
+
+    parser.add_argument('--N', type=int, default=10,
+                        help='the number of ensemble models (default: 10)')
 
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
@@ -63,17 +69,18 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
 
-    agent = SACAgent(
+    agent = REDQAgent(
         state_size=env.sensor.n_sensor*args.history_window,
         action_size=1,
         hidden_size=64,
         buffer_size=2**14,
         minibatch_size=256,
         exploration_step=3000,
+        N=args.N,
         G=args.G
     )
 
-    model_type = 'sac' if args.G==1 else f'sac_g{args.G}'
+    model_type = 'redq'
 
     infer(env, agent, model_type, args)
 
