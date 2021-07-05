@@ -45,8 +45,8 @@ if __name__ == '__main__':
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
 
-    parser.add_argument('--seed', type=int, default=1,
-                        help='the seed number of numpy and torch (default: 1)')
+    parser.add_argument('--seed', type=int, default=1234,
+                        help='the seed number of numpy and torch (default: 1234)')
 
     args = parser.parse_args()
     
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         action_size=1,
         hidden_size=64,
         buffer_size=2**14,
-        minibatch_size=256,
+        minibatch_size=64,
         exploration_step=3000,
         N=args.N,
         G=args.G
