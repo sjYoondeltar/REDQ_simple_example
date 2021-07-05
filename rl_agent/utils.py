@@ -18,6 +18,10 @@ class Rewardrecorder:
 
 def train(env, agent, model_type, args):
 
+    # linear velocity in the train process
+
+    vel = 3
+
     H = args.history_window
     
     if args.load:
@@ -46,7 +50,7 @@ def train(env, agent, model_type, args):
 
             steer = agent.get_action(x, True)
 
-            u = np.array([3, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
+            u = np.array([vel, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
@@ -99,6 +103,10 @@ def train(env, agent, model_type, args):
 
 
 def infer(env, agent, model_type, args):
+
+    # different linear velocity from the train process
+
+    vel = 1.5
     
     H = args.history_window
 
@@ -124,7 +132,7 @@ def infer(env, agent, model_type, args):
 
             steer = agent.get_action(x, False)
 
-            u = np.array([1.5, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
+            u = np.array([vel, env.car.u_max[1]*steer[0][0]]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 
