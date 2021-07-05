@@ -64,7 +64,7 @@ if __name__ == '__main__':
         level=2, t_max=3000, obs_list=obs_list)
 
     agent = SACAgent(
-        state_size=9*args.history_window,
+        state_size=env.sensor.n_sensor*args.history_window,
         action_size=1,
         hidden_size=64,
         buffer_size=2**14,
