@@ -45,8 +45,8 @@ if __name__ == '__main__':
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
 
-    parser.add_argument('--seed', type=int, default=1234,
-                        help='the seed number of numpy and torch (default: 1234)')
+    parser.add_argument('--seed', type=int, default=1,
+                        help='the seed number of numpy and torch (default: 1)')
 
     args = parser.parse_args()
     
