@@ -20,7 +20,7 @@
     - test : 1.5m/s, constant
 
 - screen shot  
-![screenshot](./example/img/screenshot.png)
+![screenshot](./img/screenshot.png)
 
 
 ### Reinforcement learning algorithm 
@@ -29,7 +29,7 @@
 
 
 ### Results
-![comparison](./example/img/comparison.png)
+![comparison](./img/comparison.png)
 
 
 ### Reference

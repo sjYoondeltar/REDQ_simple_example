@@ -44,7 +44,7 @@ def main_plot():
 
     # plt.show()
 
-    img_path = os.path.join(os.getcwd(), 'example', 'img')
+    img_path = os.path.join(os.getcwd(), 'img')
 
     plt.savefig(os.path.join(img_path, "comparison.png"))
 
