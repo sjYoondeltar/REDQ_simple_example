@@ -22,9 +22,15 @@ class SimpleSENSOR(object):
             self.sensor_distance_check = [self.sensor_max]
             self.intersections_check = [self.sensor_info[s_idx, -2:]]
 
-            for ob_idx in range(obstacle_info.shape[0]):
+            if obstacle_info is None:
 
-                self.check_obs_cast(s, obstacle_info[ob_idx, :, :])
+                pass
+                
+            else:
+
+                for ob_idx in range(obstacle_info.shape[0]):
+
+                    self.check_obs_cast(s, obstacle_info[ob_idx, :, :])
 
             self.check_bound_cast(s, boundary_info)
 

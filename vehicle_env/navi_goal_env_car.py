@@ -8,8 +8,8 @@ from vehicle_env.sensor_model import SimpleSENSOR
 class NAVI_ENV(object):
 
     def __init__(self, dT=0.05, x_init=[0.0, 0.0, 0], target_fix=None, u_min=[0, -np.pi/6], u_max=[2, np.pi/6],
-                t_max=800, level=1, sensor_max=10, n_sensor=9, range_sensor=[-np.pi/2, np.pi/2],
-                reward_type='cart', obs_list=[[5.0, 5.0, 10.0, 2.0], [5.0, -5.0, 10.0, 2.0]],
+                t_max=800, level=1, sensor_max=10, n_sensor=9, range_sensor=[-np.pi*0.75, np.pi*0.75],
+                reward_type='cart', obs_list=None,
                 coef_dis=0.2, coef_angle=1.2, dis_collision=1.0, terminal_cond=2.0):
 
         self.dT = dT
@@ -149,11 +149,7 @@ class NAVI_ENV(object):
 
         self.dist = np.linalg.norm(diff)
 
-        x_rel = diff[0, :]*np.cos(-self.car.x[2,:]) - diff[1, :]*np.sin(-self.car.x[2,:])
-        
-        y_rel = diff[0, :]*np.sin(-self.car.x[2,:]) + diff[1, :]*np.cos(-self.car.x[2,:])        
-
-        diff_angle = np.arctan2(y_rel, x_rel)
+        r_target = -(self.x_polar[0, 0]/20)**2 -(self.x_polar[0, 1]/np.pi)**2  
 
         r_reach = 0.0 if self.dist < self.terminal_cond else 0
 
@@ -173,8 +169,6 @@ class NAVI_ENV(object):
 
             r_obs = 0.
 
-        r_live = 0.
-
         if self.dist < self.terminal:
 
             return r_reach
@@ -189,7 +183,7 @@ class NAVI_ENV(object):
 
         else:
 
-            return r_live
+            return r_target
 
 
     def step(self, u):
@@ -203,6 +197,8 @@ class NAVI_ENV(object):
         # xn = np.concatenate([xn, sensor_measure], axis=0)
 
         self.check_contact()
+
+        self.calc_polar(xn, self.target)
 
         r = self.calc_r()
 
@@ -218,7 +214,7 @@ class NAVI_ENV(object):
 
             self.t_max_reach = True
 
-        return sensor_measure.reshape([1, -1]), r, self.terminal
+        return np.concatenate([self.x_polar, sensor_measure.reshape([1, -1])], axis=1), r, self.terminal
 
 
     def project_vec(self, vec):
@@ -279,9 +275,27 @@ class NAVI_ENV(object):
         cv2.waitKey(10)
 
 
+    def calc_polar(self, xn, target):
+
+        RT = np.array(
+            [
+                [np.cos(xn[2,0]), -np.sin(xn[2,0])],
+                [np.sin(xn[2,0]), np.cos(xn[2,0])]
+            ]
+        )
+
+        x_rel = np.matmul(RT, target) + xn[:2,:]
+
+        self.x_polar = np.zeros((1, 2))
+
+        self.x_polar[0, 0] = np.linalg.norm(x_rel.reshape([-1]), 2)
+
+        self.x_polar[0, 1] = np.arctan2(x_rel[1,0], x_rel[0,0])
+
+
     def reset(self):
 
-        _ = self.car.init_state()
+        xn = self.car.init_state()
 
         self.sensor.update_sensors(self.car.x, self.obs_pts, self.bound_pts)
 
@@ -301,7 +315,9 @@ class NAVI_ENV(object):
 
         self.obs_contact = False
 
-        return sensor_measure.reshape([1, -1]), self.target
+        self.calc_polar(xn, self.target)
+
+        return np.concatenate([self.x_polar, sensor_measure.reshape([1, -1])], axis=1), self.target
 
     def get_terminal(self):
         
@@ -383,32 +399,12 @@ class NAVI_ENV(object):
 
 if __name__ == '__main__':
 
-    wall_list =[[-16.0, 8.0, 8.0, 8.0],
-                [12.0, 8.0, 16.0, 8.0],
-                [-16.0, -8.0, 8.0, 8.0],
-                [12.0, -8.0, 16.0, 8.0]]
+    wall_list = None
 
-    # wall_list = None
-
-    # env = NAVI_ENV(x_init=[-17.0, 0.0, 0.0], target_fix=None, reward_type='polar', t_max=500, obs_list=wall_list)
     env = NAVI_ENV(x_init=[0.0, 0, 0.0], level=2, reward_type='polar', t_max=500, obs_list=wall_list)
 
 
     for eps in range(3):
-
-        # maze_gen.make_maze()
-
-        # obs_list = maze_gen.get_obstacles()
-
-        # x_init = maze_gen.get_init()
-
-        # tar = maze_gen.get_target()
-
-        # env.renew_obs_list(obs_list)
-
-        # env.renew_init(x_init)
-
-        # env.renew_target(tar)
     
         print(eps)
 
@@ -423,6 +419,8 @@ if __name__ == '__main__':
             u = np.array([2*np.random.rand(1), 2*np.pi/3*np.random.rand(1) - np.pi/3]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
+
+            print(xn)
 
             env.render()
 
