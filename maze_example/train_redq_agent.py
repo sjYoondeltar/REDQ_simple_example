@@ -60,13 +60,6 @@ if __name__ == '__main__':
         [4.0, -8.0, 32.0, 8.0]
     ]
     
-    obs_pts = np.array([[
-        [obs[0]-obs[2]/2, obs[1]-obs[3]/2],
-        [obs[0]+obs[2]/2, obs[1]-obs[3]/2],
-        [obs[0]+obs[2]/2, obs[1]+obs[3]/2],
-        [obs[0]-obs[2]/2, obs[1]+obs[3]/2],
-        ] for obs in obs_list])
-
     target = np.array([0, -16]).reshape([-1, 1])
 
     env = NAVI_ENV(
