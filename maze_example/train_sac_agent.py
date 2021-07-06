@@ -81,9 +81,9 @@ if __name__ == '__main__':
 
     model_type = 'sac' if args.G==1 else f'sac_g{args.G}'
 
-    if not os.path.isdir(os.path.join(os.getcwd(), 'example', 'savefile', model_type)):
+    if not os.path.isdir(os.path.join(os.getcwd(), 'maze_example', 'savefile', model_type)):
 
-        os.makedirs(os.path.join(os.getcwd(), 'example', 'savefile', model_type))
+        os.makedirs(os.path.join(os.getcwd(), 'maze_example', 'savefile', model_type))
 
     if not args.infer_only:
 
