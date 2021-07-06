@@ -1,11 +1,19 @@
 # REDQ simple example
 
-## 2D vehicle control learning examples
+## 2D vehicle control learning examples with REDQ
+
+
+### Reinforcement learning algorithm 
+- [x] Soft Actor Critic (SAC)
+    - [x] able to tune an update-to-date (UTD) ratio G
+- [x] Randomized Ensembled Double Q learning (REDQ)
 
 
 ### Environment
 - [x] Unicycle model
 - [x] Lidar-like sensor model
+
+- Task : reach the goal point with the green circle while avoiding the collision with walls
 
 - Observation : 9 range distance measurement values
     - maximum distance : 10m
@@ -21,15 +29,10 @@
 
 - Reward
     - -5 if collisions happens
-    - 2 * clip((distance measure of the central sensor) / 10, 0, 0.5) 
+    - 2 * clip(distance measure, 0, 0.5) 
 
 - screen shot  
 ![screenshot](./img/screenshot.png)
-
-
-### Reinforcement learning algorithm 
-- [x] Soft Actor Critic
-- [x] Randomized Ensembled Double Q learning
 
 
 ### Results

@@ -28,7 +28,7 @@ if __name__ == '__main__':
                         help='history window of observation from environment (default: 3)')
 
     parser.add_argument('--G', type=int, default=20,
-                        help='critic gradient steps (default: 20)')
+                        help='critic gradient update steps (default: 20)')
 
     parser.add_argument('--N', type=int, default=10,
                         help='the number of ensemble models (default: 10)')
