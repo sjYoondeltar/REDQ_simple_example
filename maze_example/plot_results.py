@@ -20,15 +20,15 @@ def main_plot():
 
     redq_data = load_record('redq')
 
-    fig = plt.figure(figsize=(15, 7))
+    fig = plt.figure(figsize=(10, 7))
     
     ax1 = fig.add_subplot(1, 1, 1)
     
-    ax1.plot(sac_data[:, 0], label="Soft Actor Critic")
+    ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
     
-    ax1.plot(sac_g20_data[:, 0], label="Soft Actor Critic with Critic Gradient Steps = 20")
+    ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with Critic Gradient Steps = 20")
     
-    ax1.plot(redq_data[:, 0], label="REDQ")
+    ax1.plot(redq_data[:, 2], label="REDQ")
     
     ax1.set_ylabel("cumulative rewards")
     
@@ -36,7 +36,7 @@ def main_plot():
 
     ax1.set_title("maze example : seed 1234")
     
-    ax1.set_xlim([0, 100])
+    ax1.set_xlim([0, 200])
     
     ax1.set_ylim([0, 700])
 
