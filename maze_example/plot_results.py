@@ -6,7 +6,7 @@ def load_record(record_model_type):
 
     record_model_type
 
-    root_path = os.path.join(os.getcwd(), 'example', 'savefile')
+    root_path = os.path.join(os.getcwd(), 'maze_example', 'savefile')
 
     record_data = np.load(os.path.join(root_path, record_model_type, 'reward_plot.npy'))
 
@@ -46,7 +46,7 @@ def main_plot():
 
     img_path = os.path.join(os.getcwd(), 'img')
 
-    plt.savefig(os.path.join(img_path, "comparison.png"))
+    plt.savefig(os.path.join(img_path, "comparison_maze.png"))
 
 
 if __name__ == '__main__':
