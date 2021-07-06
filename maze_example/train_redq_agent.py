@@ -76,7 +76,7 @@ if __name__ == '__main__':
         action_size=1,
         hidden_size=64,
         buffer_size=2**14,
-        minibatch_size=128,
+        minibatch_size=256,
         exploration_step=3000,
         N=args.N,
         G=args.G
