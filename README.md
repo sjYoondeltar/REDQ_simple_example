@@ -36,6 +36,9 @@
 
 
 ### Results
+
+- Early stop the training process when the agent reaches the target for 10 consecutive episodes.
+
 ![comparison](./img/comparison_maze.png)
 
 
