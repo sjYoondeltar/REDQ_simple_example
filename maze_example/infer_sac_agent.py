@@ -27,8 +27,8 @@ if __name__ == '__main__':
     parser.add_argument('--history_window', type=int, default=3,
                         help='history window of observation from environment (default: 3)')
 
-    parser.add_argument('--G', type=int, default=20,
-                        help='critic gradient steps (default: 20)')
+    parser.add_argument('--G', type=int, default=1,
+                        help='critic gradient steps (default: 1)')
 
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')

@@ -33,8 +33,10 @@ def main_plot():
     ax1.set_ylabel("cumulative rewards")
     
     ax1.set_xlabel("episode")
+
+    ax1.set_title("maze example : seed 1234")
     
-    ax1.set_xlim([0, 60])
+    ax1.set_xlim([0, 100])
     
     ax1.set_ylim([0, 700])
 
