@@ -38,7 +38,7 @@ def main_plot():
     
     ax1.set_xlim([0, 200])
     
-    ax1.set_ylim([0, 700])
+    ax1.set_ylim([0, 500])
 
     ax1.grid()
 
