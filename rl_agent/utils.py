@@ -16,6 +16,17 @@ class Rewardrecorder:
         np.save(os.path.join(save_path, "reward_plot.npy"), self.memory)
 
 
+class Controlrecorder:
+    def __init__(self):
+        self.memory = []
+
+    def push(self, data):
+        self.memory.append(data)
+
+    def save(self, save_path):
+        np.save(os.path.join(save_path, "navi_record.npy"), self.memory)
+
+
 def train(env, agent, model_type, args):
 
     # linear velocity in the train process
@@ -128,6 +139,8 @@ def infer(env, agent, model_type, args):
     agent.load_model(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type))
 
     recent_mission_results = []
+
+    navi_recorder = Controlrecorder()
         
     for eps in range(args.max_infer_eps):
         
@@ -162,6 +175,10 @@ def infer(env, agent, model_type, args):
 
             xn, r, done = env.step(u)
 
+            if eps+1==args.max_infer_eps:
+
+                navi_recorder.push((env.car.x.reshape([-1])))
+
             xn = np.concatenate([x[:, int(agent.state_size/H):], xn], axis=1)
 
             mask = 0 if done else 1
@@ -182,4 +199,8 @@ def infer(env, agent, model_type, args):
 
         mission_results = 'success!' if env.reach else 'fail'
         print('{} episode | live steps : {:.2f} | '.format(eps + 1, steps_ep) + mission_results)
+
+    print("record the trajectory ...")
+
+    navi_recorder.save(os.path.join(os.getcwd(), args.task+'_example', 'savefile', model_type))
 

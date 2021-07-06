@@ -10,7 +10,7 @@ import torch
 import random
 
 from rl_agent.sac import SACAgent
-from rl_agent.utils import Rewardrecorder, infer, train
+from rl_agent.utils import Rewardrecorder, Controlrecorder, infer, train
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 
