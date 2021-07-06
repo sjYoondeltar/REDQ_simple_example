@@ -29,7 +29,7 @@
 
 
 ### Results
-![comparison](./img/comparison.png)
+![comparison](./img/comparison_maze.png)
 
 
 ### Reference
