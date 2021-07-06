@@ -26,7 +26,7 @@ def main_plot():
     
     ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
     
-    ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with Critic Gradient Steps = 20")
+    ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with G = 20")
     
     ax1.plot(redq_data[:, 2], label="REDQ")
     
