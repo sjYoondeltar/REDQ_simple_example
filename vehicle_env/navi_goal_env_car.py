@@ -147,7 +147,7 @@ class NAVI_ENV(object):
 
         self.dist = np.linalg.norm(diff)
 
-        r_target = -(self.x_polar[0, 0]/20)**2 -(self.x_polar[0, 1]/np.pi)**2  
+        r_target = -(self.x_polar[0, 0]/20)**2 -2*(self.x_polar[0, 1]/np.pi)**2  
 
         r_reach = 0.0 if self.dist < self.terminal_cond else 0
 
