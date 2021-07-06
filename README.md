@@ -19,6 +19,10 @@
     - train : 3m/s, constant
     - test : 1.5m/s, constant
 
+- Reward
+    - -5 if collisions happens
+    - 2 * clip((distance measure of the central sensor) / 10, 0, 0.5) 
+
 - screen shot  
 ![screenshot](./img/screenshot.png)
 
