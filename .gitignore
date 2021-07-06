@@ -129,9 +129,7 @@ dmypy.json
 .pyre/
 
 # Savefile
-/maze_example/savefile
-/navi_example/savefile
-
+/maze_example/savefile/
 
 # Trash
 /repo_trash
