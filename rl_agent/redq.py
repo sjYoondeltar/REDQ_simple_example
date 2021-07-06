@@ -211,14 +211,16 @@ class REDQAgent(object):
 
         if is_training:
             
-            if self.sample_enough:
+            # if self.sample_enough:
 
-                normal = Normal(mu, std)
+            #     normal = Normal(mu, std)
 
-            else:
+            # else:
 
-                normal = Normal(mu, 100)
-        
+            #     normal = Normal(mu, 100)
+
+            normal = Normal(mu, std)
+                
         else:
 
             normal = Normal(mu, 0.001)
@@ -244,7 +246,7 @@ class REDQAgent(object):
 
     def push_samples(self, state, action, reward, next_state, mask):
         
-        self.buffer.push((state, action, reward, next_state, mask))
+        self.buffer.push([state, action, reward, next_state, mask])
         
         if self.n_step==1:
             

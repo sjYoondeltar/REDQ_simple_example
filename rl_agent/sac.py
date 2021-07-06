@@ -213,13 +213,15 @@ class SACAgent(object):
 
         if is_training:
             
-            if self.sample_enough:
+            # if self.sample_enough:
 
-                normal = Normal(mu, std)
+            #     normal = Normal(mu, std)
 
-            else:
+            # else:
 
-                normal = Normal(mu, 100)
+            #     normal = Normal(mu, 100)
+
+            normal = Normal(mu, std)
         
         else:
 
@@ -246,7 +248,7 @@ class SACAgent(object):
 
     def push_samples(self, state, action, reward, next_state, mask):
         
-        self.buffer.push((state, action, reward, next_state, mask))
+        self.buffer.push([state, action, reward, next_state, mask])
         
         if self.n_step==1:
             
