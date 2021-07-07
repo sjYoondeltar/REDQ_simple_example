@@ -47,4 +47,4 @@
 ### Reference
 - [2D vehicle Env](https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow)
 - [REDQ paper](https://arxiv.org/abs/2101.05982)
-- [REDQ another implementation](https://github.com/BY571/Randomized-Ensembled-Double-Q-learning-REDQ-)
+- [REDQ pytorch implementation](https://github.com/BY571/Randomized-Ensembled-Double-Q-learning-REDQ-)
