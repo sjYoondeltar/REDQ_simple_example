@@ -31,7 +31,7 @@
 
 - Reward
     - -5 if collisions happens
-    - 2 * clip(distance measure, 0, 0.5) 
+    - 2 * clip(forward distance measure, 0, 0.5) 
 
 - screen shot  
 ![screenshot](./img/screenshot.png)
