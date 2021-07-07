@@ -46,7 +46,7 @@ if __name__ == '__main__':
                         help='render the environment on training or inference')
 
     parser.add_argument('--version', type=str, default='v1',
-                        help='REDQ version')
+                        help='REDQ version (default: v1)')
 
     parser.add_argument('--seed', type=int, default=1234,
                         help='the seed number of numpy and torch (default: 1234)')
@@ -86,7 +86,7 @@ if __name__ == '__main__':
             N=args.N,
             G=args.G
         )
-        
+
         model_type = 'redq'
 
     else:

@@ -9,7 +9,7 @@ import argparse
 import torch
 import random
 
-from rl_agent.redq import REDQAgent
+from rl_agent.redq import REDQAgent, REDQAgentV2
 from rl_agent.utils import Rewardrecorder, infer, train
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
@@ -36,6 +36,9 @@ if __name__ == '__main__':
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
 
+    parser.add_argument('--version', type=str, default='v1',
+                        help='REDQ version (default: v1)')
+
     parser.add_argument('--seed', type=int, default=1,
                         help='the seed number of numpy and torch (default: 1)')
 
@@ -50,13 +53,6 @@ if __name__ == '__main__':
         [12.0, 8.0, 16.0, 24.0],
         [4.0, -8.0, 32.0, 8.0]
     ]
-    
-    obs_pts = np.array([[
-        [obs[0]-obs[2]/2, obs[1]-obs[3]/2],
-        [obs[0]+obs[2]/2, obs[1]-obs[3]/2],
-        [obs[0]+obs[2]/2, obs[1]+obs[3]/2],
-        [obs[0]-obs[2]/2, obs[1]+obs[3]/2],
-        ] for obs in obs_list])
 
     target = np.array([0, -16]).reshape([-1, 1])
 
@@ -69,18 +65,35 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
 
-    agent = REDQAgent(
-        state_size=env.sensor.n_sensor*args.history_window,
-        action_size=1,
-        hidden_size=64,
-        buffer_size=2**14,
-        minibatch_size=256,
-        exploration_step=3000,
-        N=args.N,
-        G=args.G
-    )
+    if args.version == 'v1':
 
-    model_type = 'redq'
+        agent = REDQAgent(
+            state_size=env.sensor.n_sensor*args.history_window,
+            action_size=1,
+            hidden_size=64,
+            buffer_size=2**14,
+            minibatch_size=256,
+            exploration_step=3000,
+            N=args.N,
+            G=args.G
+        )
+        
+        model_type = 'redq'
+
+    else:
+
+        agent = REDQAgentV2(
+            state_size=env.sensor.n_sensor*args.history_window,
+            action_size=1,
+            hidden_size=64,
+            buffer_size=2**14,
+            minibatch_size=256,
+            exploration_step=3000,
+            N=args.N,
+            G=args.G
+        )
+
+        model_type = 'redq_v2'
 
     infer(env, agent, model_type, args)
 

@@ -20,6 +20,8 @@ def main_plot():
 
     redq_data = load_record('redq')
 
+    redq_v2_data = load_record('redq_v2')
+
     fig = plt.figure(figsize=(10, 7))
     
     ax1 = fig.add_subplot(1, 1, 1)
@@ -29,6 +31,8 @@ def main_plot():
     ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with G = 20")
     
     ax1.plot(redq_data[:, 2], label="REDQ")
+    
+    ax1.plot(redq_v2_data[:, 2], label="REDQ V2")
     
     ax1.set_ylabel("cumulative rewards")
     
