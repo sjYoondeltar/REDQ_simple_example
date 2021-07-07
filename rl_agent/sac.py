@@ -148,6 +148,7 @@ class SACAgent(object):
         lr_alpha=1e-4,
         train_alpha=True,
         exploration_step=5000,
+        device='cuda',
         G=1
         ):
         super().__init__()
@@ -163,8 +164,7 @@ class SACAgent(object):
         self.exploration_step = exploration_step
         self.G = G
 
-        use_cuda = torch.cuda.is_available()
-        self.device = torch.device('cuda' if use_cuda else 'cpu')
+        self.device = torch.device(device)
 
         self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
         self.critic = Critic(state_size, action_size, hidden_size).to(self.device)

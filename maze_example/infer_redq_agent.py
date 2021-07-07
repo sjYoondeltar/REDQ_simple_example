@@ -16,7 +16,7 @@ from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
+    parser = argparse.ArgumentParser(description='REDQ algorithm with PyTorch in a 2D vehicle environment')
 
     parser.add_argument('--task', type=str, default='maze',
                         help='type of tasks in the environment')

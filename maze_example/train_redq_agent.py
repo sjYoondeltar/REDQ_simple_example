@@ -9,14 +9,14 @@ import argparse
 import torch
 import random
 
-from rl_agent.redq import REDQAgent
+from rl_agent.redq import REDQAgent, REDQAgentV2
 from rl_agent.utils import Rewardrecorder, infer, train
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description='Soft actor critic algorithm with PyTorch in a 2D vehicle environment')
+    parser = argparse.ArgumentParser(description='REDQ algorithm with PyTorch in a 2D vehicle environment')
     
     parser.add_argument('--task', type=str, default='maze',
                         help='type of tasks in the environment')
@@ -44,6 +44,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
+
+    parser.add_argument('--version', type=str, default='v1',
+                        help='REDQ version')
 
     parser.add_argument('--seed', type=int, default=1234,
                         help='the seed number of numpy and torch (default: 1234)')
@@ -82,7 +85,7 @@ if __name__ == '__main__':
         G=args.G
     )
 
-    model_type = 'redq'
+    model_type = 'redq' if args.version == 'v1' else 'redq_v2'
 
     if not os.path.isdir(os.path.join(os.getcwd(), 'maze_example', 'savefile', model_type)):
 
