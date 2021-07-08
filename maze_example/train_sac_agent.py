@@ -21,9 +21,6 @@ if __name__ == '__main__':
     parser.add_argument('--task', type=str, default='maze',
                         help='type of tasks in the environment')
 
-    parser.add_argument('--infer_only', action='store_true', default=False,
-                        help='do not train the agent in the environment')
-
     parser.add_argument('--load', action='store_true', default=False,
                         help='copy & paste the saved model name, and load it')
 
