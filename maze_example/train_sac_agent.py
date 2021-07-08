@@ -85,9 +85,7 @@ if __name__ == '__main__':
 
         os.makedirs(os.path.join(os.getcwd(), 'maze_example', 'savefile', model_type))
 
-    if not args.infer_only:
-
-        train(env, agent, model_type, args)
+    train(env, agent, model_type, args)
 
     infer(env, agent, model_type, args)
 

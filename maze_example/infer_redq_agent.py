@@ -65,35 +65,19 @@ if __name__ == '__main__':
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
 
-    if args.version == 'v1':
+    agent = REDQAgent(
+        state_size=env.sensor.n_sensor*args.history_window,
+        action_size=1,
+        hidden_size=64,
+        buffer_size=2**14,
+        minibatch_size=256,
+        exploration_step=3000,
+        N=args.N,
+        G=args.G,
+        version=args.version
+    )
 
-        agent = REDQAgent(
-            state_size=env.sensor.n_sensor*args.history_window,
-            action_size=1,
-            hidden_size=64,
-            buffer_size=2**14,
-            minibatch_size=256,
-            exploration_step=3000,
-            N=args.N,
-            G=args.G
-        )
-        
-        model_type = 'redq'
-
-    else:
-
-        agent = REDQAgentV2(
-            state_size=env.sensor.n_sensor*args.history_window,
-            action_size=1,
-            hidden_size=64,
-            buffer_size=2**14,
-            minibatch_size=256,
-            exploration_step=3000,
-            N=args.N,
-            G=args.G
-        )
-
-        model_type = 'redq_v2'
+    model_type = 'redq' if args.version == 'v1' else 'redq_v2'
 
     infer(env, agent, model_type, args)
 
