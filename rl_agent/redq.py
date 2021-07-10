@@ -341,7 +341,7 @@ class REDQAgent(object):
 
                     critic_loss = 0
 
-                    for critic, target_critic in zip(self.critic_list, self.target_critic_list):
+                    for critic in self.critic_list:
 
                         criterion = torch.nn.MSELoss()
 
