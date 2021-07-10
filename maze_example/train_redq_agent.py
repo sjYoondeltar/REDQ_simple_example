@@ -21,6 +21,9 @@ if __name__ == '__main__':
     parser.add_argument('--task', type=str, default='maze',
                         help='type of tasks in the environment')
 
+    parser.add_argument('--device', type=str, default='cuda',
+                        help='the device used for pytorch tensor between cuda and cpu (default: cuda)')
+
     parser.add_argument('--load', action='store_true', default=False,
                         help='copy & paste the saved model name, and load it')
 
@@ -78,6 +81,7 @@ if __name__ == '__main__':
         buffer_size=2**14,
         minibatch_size=256,
         exploration_step=3000,
+        device=args.device,
         N=args.N,
         G=args.G,
         version=args.version
