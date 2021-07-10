@@ -231,7 +231,7 @@ class SACAgent(object):
         z = normal.rsample()
         action = torch.tanh(z)
         log_prob = normal.log_prob(z)
-        
+
         log_prob -= torch.log(1 - action.pow(2) + epsilon)
         log_policy = log_prob.sum(1, keepdim=True)
 
@@ -253,6 +253,8 @@ class SACAgent(object):
     def train_model(self):
 
         if self.sample_enough:
+
+            # update the critic
 
             for _ in range(self.G):
 

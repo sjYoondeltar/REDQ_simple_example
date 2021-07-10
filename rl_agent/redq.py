@@ -155,7 +155,7 @@ class REDQAgent(object):
         
         self.N = N 
         self.M = M
-        self.G = G # UTD-ratio
+        self.G = G # UTD ratio
 
         self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=lr_a, eps=1e-5)
@@ -273,7 +273,7 @@ class REDQAgent(object):
 
         if self.sample_enough:
 
-            # -----------critic update
+            # update the ensemble critics
 
             for _ in range(self.G):
 
