@@ -154,9 +154,9 @@ class REDQAgent(object):
 
         self.device = torch.device(device)
         
-        self.N = N # number of critics in the ensemble
-        self.M = M # number of target critics that are randomly selected
-        self.G = G # Updates per step ~ UTD-ratio
+        self.N = N 
+        self.M = M
+        self.G = G # UTD-ratio
 
         self.actor = Actor(state_size, action_size, hidden_size).to(self.device)
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=lr_a, eps=1e-5)
