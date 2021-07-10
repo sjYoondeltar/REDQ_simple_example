@@ -5,11 +5,12 @@
 
 ### Reinforcement learning algorithm
 
-- [x] Soft Actor Critic (SAC)
-    - [x] able to tune an update-to-date (UTD) ratio G
-- [x] Randomized Ensembled Double Q learning (REDQ)
-    - [x] v1 : N critics and N critic optimizers
-    - [x] v2 : N critics and 1 critic optimizer
+- Agent
+    - [x] Soft Actor Critic (SAC)
+        - [x] able to tune an update-to-date (UTD) ratio G
+    - [x] Randomized Ensembled Double Q learning (REDQ)
+        - [x] v1 : N critics and N critic optimizers
+        - [x] v2 : N critics and 1 critic optimizer
 - ETC
     - [x] multi-step Q learning
 
