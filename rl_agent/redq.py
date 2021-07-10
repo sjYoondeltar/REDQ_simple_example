@@ -67,7 +67,6 @@ class Critic(nn.Module):
         return q_value1
 
 
-
 class ExperienceReplayMemory:
     def __init__(self, buffer_size):
         self.buffer_size = buffer_size
@@ -239,7 +238,7 @@ class REDQAgent(object):
 
             normal = Normal(mu, 0.001)
         
-        z = normal.rsample() # reparameterization trick (mean + std * N(0,1))
+        z = normal.rsample()
         action = torch.tanh(z)
 
         return action.data.cpu().numpy()
@@ -248,11 +247,10 @@ class REDQAgent(object):
 
         mu, std = self.actor(torch.Tensor(states).to(self.device))
         normal = Normal(mu, std)
-        z = normal.rsample() # reparameterization trick (mean + std * N(0,1))
+        z = normal.rsample()
         action = torch.tanh(z)
         log_prob = normal.log_prob(z)
 
-        # Enforcing Action Bounds
         log_prob -= torch.log(1 - action.pow(2) + epsilon)
         log_policy = log_prob.sum(1, keepdim=True)
 
