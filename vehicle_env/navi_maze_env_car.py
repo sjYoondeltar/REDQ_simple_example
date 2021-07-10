@@ -148,13 +148,7 @@ class NAVI_ENV(object):
         diff = self.target - self.car.x[:2, :]
 
         self.dist = np.linalg.norm(diff)
-
-        x_rel = diff[0, :]*np.cos(-self.car.x[2,:]) - diff[1, :]*np.sin(-self.car.x[2,:])
         
-        y_rel = diff[0, :]*np.sin(-self.car.x[2,:]) + diff[1, :]*np.cos(-self.car.x[2,:])        
-
-        diff_angle = np.arctan2(y_rel, x_rel)
-
         r_reach = 0.0 if self.dist < self.terminal_cond else 0
 
         if self.wall_contact:
