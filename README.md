@@ -50,6 +50,7 @@ python /maze_example/train_redq_agent.py --max_train_eps 100 --version v2
 ~~~
     - After the training of REDQ, the parameters of the agent are saved in the directory '(/maze_example/savefile/redq_v2)
 
+
 ### Results
 
 - Early stop the training process when the agent reaches the target for 10 consecutive episodes.
