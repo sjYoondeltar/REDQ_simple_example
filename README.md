@@ -43,6 +43,17 @@
 
 ### Train the agent
 
+- Soft actor critic
+    - After the training of REDQ, the parameters of the agent are saved in the directory `/maze_example/savefile/sac` 
+    or `/maze_example/savefile/sac_g20`
+~~~
+cd REDQ_simple_example
+python /maze_example/train_sac_agent.py --max_train_eps 100
+~~~
+~~~
+python /maze_example/train_sac_agent.py --max_train_eps 100 --G 20
+~~~
+
 - REDQ
     - After the training of REDQ, the parameters of the agent are saved in the directory `/maze_example/savefile/redq` 
     or `/maze_example/savefile/redq_v2`
