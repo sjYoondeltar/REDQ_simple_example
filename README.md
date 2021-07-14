@@ -21,12 +21,16 @@
 
 - Task : reach the goal point with the green circle while avoiding the collision with walls
 
-- Observation : 9 range distance measurement values
+- Observation : different direction scan measurement values
+    - the default number of scan value N : 9
     - maximum distance : 10m
+    - historical window length H : H consecutive observations are concatenated with the shape (1, N*H)
     - angle range : [-120 deg, 120 deg]
     - minmax normalized to [0, 1]
 
 - Action : angular velocity
+    - action range : [-pi/4 rad/s, pi/4 rad/s]
+
     - action range : [-pi/4 rad/s, pi/4 rad/s]
 
 - Linear velocity
