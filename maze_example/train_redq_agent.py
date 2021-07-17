@@ -9,7 +9,7 @@ import argparse
 import torch
 import random
 
-from rl_agent.redq import REDQAgent, REDQAgentV2
+from rl_agent.redq import REDQAgent
 from rl_agent.utils import Rewardrecorder, infer, train
 from vehicle_env.navi_maze_env_car import NAVI_ENV
 

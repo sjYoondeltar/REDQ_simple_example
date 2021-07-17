@@ -163,6 +163,8 @@ class REDQAgent(object):
         self.critic_list = []
         self.target_critic_list = []
 
+        self.version = version
+
         if self.version == 'v1':
 
             self.critic_optimizer_list = []
