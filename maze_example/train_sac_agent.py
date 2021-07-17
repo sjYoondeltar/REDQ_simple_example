@@ -74,7 +74,7 @@ if __name__ == '__main__':
         hidden_size=64,
         buffer_size=2**14,
         minibatch_size=256,
-        exploration_step=10000,
+        exploration_step=3000,
         device=args.device,
         G=args.G
     )
