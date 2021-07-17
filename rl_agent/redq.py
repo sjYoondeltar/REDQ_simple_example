@@ -233,8 +233,14 @@ class REDQAgent(object):
         mu, std = self.actor(torch.Tensor(states).to(self.device))
 
         if is_training:
-            
-            normal = Normal(mu, std)
+    
+            if self.sample_enough:
+
+                normal = Normal(mu, std)
+
+            else:
+
+                normal = Normal(mu, 15)
                 
         else:
 

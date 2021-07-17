@@ -213,7 +213,13 @@ class SACAgent(object):
 
         if is_training:
 
-            normal = Normal(mu, std)
+            if self.sample_enough:
+
+                normal = Normal(mu, std)
+
+            else:
+
+                normal = Normal(mu, 15)
         
         else:
 
