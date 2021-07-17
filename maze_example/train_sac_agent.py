@@ -51,7 +51,6 @@ if __name__ == '__main__':
     np.random.seed(args.seed)
     random.seed(args.seed)
 
-
     obs_list =[
         [-12.0, 8.0, 16.0, 8.0],
         [12.0, 8.0, 16.0, 24.0],
