@@ -31,8 +31,6 @@
 - Action : angular velocity
     - action range : [-pi/4 rad/s, pi/4 rad/s]
 
-    - action range : [-pi/4 rad/s, pi/4 rad/s]
-
 - Linear velocity
     - train : 3m/s, constant
     - test : 1.5m/s, constant
