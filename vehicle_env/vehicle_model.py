@@ -4,7 +4,7 @@ import itertools
 
 class UNICAR(object):
     
-    def __init__(self, dT=0.05, x_init=[0.0, 0.0, 0], u_min=[0, -np.pi/6], u_max=[2, np.pi/6], noise_w=[0.1, 0.1]):
+    def __init__(self, dT=0.05, x_init=[0.0, 0.0, 0], u_min=[0, -np.pi/6], u_max=[2, np.pi/6], noise_w=[0.5, 0.1]):
         
         self.x_init= np.array(x_init, dtype=np.float32).reshape([-1,1])
 
