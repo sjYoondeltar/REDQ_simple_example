@@ -35,6 +35,10 @@
     - train : 3m/s, constant
     - test : 1.5m/s, constant
 
+- Disturbance
+    - zero mean gaussian noise with std 0.5 for linear velocities
+    - zero mean gaussian noise with std 0.1 for angular velocities
+
 - Reward
     - -5 if collisions happens
     - 2 * clip(forward distance measure, 0, 0.5) 
