@@ -130,7 +130,7 @@ def train(env, agent, model_type, args):
 
 def infer(env, agent, model_type, args):
 
-    # different linear velocity from the train process
+    # different linear velocity from the test process
 
     vel = 1.5
     
