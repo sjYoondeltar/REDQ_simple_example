@@ -2,13 +2,15 @@ import numpy as np
 
 class SimpleSENSOR(object):
 
-    def __init__(self, n_sensor=7, sensor_max=2, range_sensor=[-np.pi, np.pi]):
+    def __init__(self, n_sensor=7, sensor_max=2, range_sensor=[-np.pi, np.pi], noise_std=0.2):
 
         self.n_sensor = n_sensor
         self.sensor_max = sensor_max
         self.sensor_angle = np.linspace(range_sensor[0], range_sensor[1], n_sensor)
 
         self.sensor_info = sensor_max + np.zeros((n_sensor, 3))
+
+        self.noise_std = noise_std
 
     def update_sensors(self, vehicle_info, obstacle_info, boundary_info):
 
@@ -36,7 +38,7 @@ class SimpleSENSOR(object):
 
             distance = np.min(self.sensor_distance_check)
             distance_index = np.argmin(self.sensor_distance_check)
-            self.sensor_info[s_idx, 0] = distance
+            self.sensor_info[s_idx, 0] = np.clip(distance + self.noise_std * np.random.randn(1), 0, self.sensor_max)  
             self.sensor_info[s_idx, -2:] = self.intersections_check[distance_index]
             
 
