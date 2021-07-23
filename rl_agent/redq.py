@@ -239,8 +239,8 @@ class REDQAgent(object):
                 normal = Normal(mu, std)
 
             else:
-
-                normal = Normal(mu, 15)
+        
+                normal = Normal(torch.zeros_like(mu), 2)
                 
         else:
 

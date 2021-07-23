@@ -33,8 +33,8 @@ if __name__ == '__main__':
     parser.add_argument('--max_infer_eps', type=int, default=5,
                         help='maximum number of episodes for inference (default: 5)')
 
-    parser.add_argument('--history_window', type=int, default=3,
-                        help='history window of observation from environment (default: 3)')
+    parser.add_argument('--history_window', type=int, default=4,
+                        help='history window of observation from environment (default: 4)')
 
     parser.add_argument('--G', type=int, default=1,
                         help='critic gradient update steps (default: 1)')
@@ -66,7 +66,7 @@ if __name__ == '__main__':
         u_max=[4, np.pi/4],
         reward_type='polar',
         target_fix=target,
-        level=2, t_max=3000, obs_list=obs_list)
+        level=2, t_max=2000, obs_list=obs_list)
 
     agent = SACAgent(
         state_size=env.sensor.n_sensor*args.history_window,
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         hidden_size=64,
         buffer_size=2**14,
         minibatch_size=256,
-        exploration_step=3000,
+        exploration_step=2000,
         device=args.device,
         G=args.G
     )
