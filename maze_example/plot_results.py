@@ -14,11 +14,11 @@ def load_record(record_model_type):
 
 def main_plot():
 
-    sac_data = load_record('sac')
+    # sac_data = load_record('sac')
 
     sac_g20_data = load_record('sac_g20')
 
-    redq_data = load_record('redq')
+    # redq_data = load_record('redq')
 
     redq_v2_data = load_record('redq_v2')
 
@@ -26,11 +26,11 @@ def main_plot():
     
     ax1 = fig.add_subplot(1, 1, 1)
     
-    ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
+    # ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
     
     ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with G = 20")
     
-    ax1.plot(redq_data[:, 2], label="REDQ")
+    # ax1.plot(redq_data[:, 2], label="REDQ")
     
     ax1.plot(redq_v2_data[:, 2], label="REDQ V2")
     
@@ -40,9 +40,9 @@ def main_plot():
 
     ax1.set_title("maze example : seed 1234")
     
-    ax1.set_xlim([0, 200])
+    ax1.set_xlim([0, 50])
     
-    ax1.set_ylim([0, 500])
+    ax1.set_ylim([0, 600])
 
     ax1.grid()
 
