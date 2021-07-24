@@ -14,7 +14,7 @@ def load_record(record_model_type):
 
 def main_plot():
 
-    # sac_data = load_record('sac')
+    sac_data = load_record('sac')
 
     sac_g20_data = load_record('sac_g20')
 
@@ -26,7 +26,7 @@ def main_plot():
     
     ax1 = fig.add_subplot(1, 1, 1)
     
-    # ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
+    ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
     
     ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with G = 20")
     
@@ -40,7 +40,7 @@ def main_plot():
 
     ax1.set_title("maze example : seed 1234")
     
-    ax1.set_xlim([0, 50])
+    ax1.set_xlim([0, 150])
     
     ax1.set_ylim([0, 600])
 
