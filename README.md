@@ -72,6 +72,7 @@ python /maze_example/train_redq_agent.py --max_train_eps 100 --version v2
 ### Results
 
 - Early stop the training process when the agent reaches the target for 10 consecutive episodes.
+- In the complex environments, the performance gap between SAC-G and REDQ might widen further
 
 ![comparison](./img/comparison_maze.png)
 
