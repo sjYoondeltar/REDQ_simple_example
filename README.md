@@ -27,6 +27,7 @@
     - historical window length H : H consecutive observations are concatenated with the shape (1, N*H)
     - angle range : [-120 deg, 120 deg]
     - minmax normalized to [0, 1]
+    - [x] add gaussian sensor noise : 0.2
 
 - Action : angular velocity
     - action range : [-pi/5 rad/s, pi/5 rad/s]
