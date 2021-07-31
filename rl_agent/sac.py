@@ -219,7 +219,7 @@ class SACAgent(object):
 
             else:
     
-                normal = Normal(torch.zeros_like(mu), 2)
+                normal = Normal(torch.zeros_like(mu), 5)
         
         else:
 
