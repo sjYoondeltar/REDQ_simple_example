@@ -14,6 +14,8 @@ def load_record(record_model_type):
 
 def main_plot():
 
+    seed = 4321
+
     sac_data = load_record('sac')
 
     sac_g20_data = load_record('sac_g20')
@@ -38,7 +40,7 @@ def main_plot():
     
     ax1.set_xlabel("episode")
 
-    ax1.set_title("maze example : seed 1234")
+    ax1.set_title(f"maze example : seed {seed:d}")
     
     ax1.set_xlim([0, 150])
     
