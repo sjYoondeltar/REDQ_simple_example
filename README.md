@@ -30,7 +30,7 @@
     - [x] add gaussian sensor noise : 0.2
 
 - Action : angular velocity
-    - action range : [-pi/5 rad/s, pi/5 rad/s]
+    - action range : [-pi/4 rad/s, pi/4 rad/s]
 
 - Linear velocity
     - train : 3m/s, constant
