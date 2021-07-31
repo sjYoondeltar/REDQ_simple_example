@@ -48,6 +48,9 @@ if __name__ == '__main__':
     parser.add_argument('--version', type=str, default='v1',
                         help='REDQ version (default: v1)')
 
+    parser.add_argument('--fix_alpha', action='store_true', default=False,
+                        help='fix alpha to 0.2')
+
     parser.add_argument('--seed', type=int, default=1234,
                         help='the seed number of numpy and torch (default: 1234)')
 
@@ -84,7 +87,8 @@ if __name__ == '__main__':
         device=args.device,
         N=args.N,
         G=args.G,
-        version=args.version
+        version=args.version,
+        train_alpha= not args.fix_alpha
     )
 
     model_type = 'redq' if args.version == 'v1' else 'redq_v2'

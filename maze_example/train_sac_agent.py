@@ -42,6 +42,9 @@ if __name__ == '__main__':
     parser.add_argument('--render', action='store_true', default=False,
                         help='render the environment on training or inference')
 
+    parser.add_argument('--fix_alpha', action='store_true', default=False,
+                        help='fix alpha to 0.2')
+
     parser.add_argument('--seed', type=int, default=1234,
                         help='the seed number of numpy and torch (default: 1234)')
 
@@ -76,6 +79,7 @@ if __name__ == '__main__':
         minibatch_size=256,
         exploration_step=2000,
         device=args.device,
+        train_alpha= not args.fix_alpha,
         G=args.G
     )
 
