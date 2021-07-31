@@ -28,13 +28,13 @@ def main_plot():
     
     ax1 = fig.add_subplot(1, 1, 1)
     
-    ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
+    ax1.plot(sac_data[:, 1], label="Soft Actor Critic")
     
-    ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with G = 20")
+    ax1.plot(sac_g20_data[:, 1], label="Soft Actor Critic with G = 20")
     
     # ax1.plot(redq_data[:, 2], label="REDQ")
     
-    ax1.plot(redq_v2_data[:, 2], label="REDQ V2")
+    ax1.plot(redq_v2_data[:, 1], label="REDQ V2")
     
     ax1.set_ylabel("cumulative rewards")
     
@@ -42,7 +42,7 @@ def main_plot():
 
     ax1.set_title(f"maze example : seed {seed:d}")
     
-    ax1.set_xlim([0, 150])
+    ax1.set_xlim([0, 200])
     
     ax1.set_ylim([0, 600])
 
