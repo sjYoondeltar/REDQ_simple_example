@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     obs_list =[
         [-12.0, 8.0, 16.0, 8.0],
-        [12.0, 8.0, 16.0, 24.0],
+        [10.0, 8.0, 16.0, 24.0],
         [4.0, -8.0, 32.0, 8.0]
     ]
 
@@ -62,8 +62,8 @@ if __name__ == '__main__':
     env = NAVI_ENV(
         dT=0.1,
         x_init=[-16.0, 16.0, 0],
-        u_min=[0, -np.pi/4],
-        u_max=[4, np.pi/4],
+        u_min=[0, -np.pi/2],
+        u_max=[4, np.pi/2],
         reward_type='polar',
         target_fix=target,
         level=2, t_max=3000, obs_list=obs_list)
