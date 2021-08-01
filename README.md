@@ -41,7 +41,7 @@
     - zero mean gaussian noise with std 0.1 for angular velocities
 
 - Reward
-    - -5 if collisions happens
+    - -5 if collisions happens (sparse)
     <!-- - 2 * clip(forward distance measure, 0, 0.5)  -->
 
 - screen shot  
