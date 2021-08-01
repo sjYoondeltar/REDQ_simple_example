@@ -71,8 +71,8 @@ if __name__ == '__main__':
     env = NAVI_ENV(
         dT=0.1,
         x_init=[-16.0, 16.0, 0],
-        u_min=[0, -np.pi/3],
-        u_max=[4, np.pi/3],
+        u_min=[0, -np.pi/2],
+        u_max=[4, np.pi/2],
         reward_type='polar',
         target_fix=target,
         level=2, t_max=2000, obs_list=obs_list)
