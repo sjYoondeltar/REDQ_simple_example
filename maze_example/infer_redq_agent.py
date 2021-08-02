@@ -27,8 +27,8 @@ if __name__ == '__main__':
     parser.add_argument('--max_infer_eps', type=int, default=5,
                         help='maximum number of episodes for inference (default: 5)')
 
-    parser.add_argument('--history_window', type=int, default=3,
-                        help='history window of observation from environment (default: 3)')
+    parser.add_argument('--history_window', type=int, default=4,
+                        help='history window of observation from environment (default: 4)')
 
     parser.add_argument('--G', type=int, default=20,
                         help='critic gradient update steps (default: 20)')

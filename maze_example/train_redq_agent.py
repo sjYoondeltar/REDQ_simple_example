@@ -60,10 +60,10 @@ if __name__ == '__main__':
     np.random.seed(args.seed)
     random.seed(args.seed)
     
-    obs_list =[
+    obs_list = [
         [-8.0, 0.0, 8.0, 24.0],
         [8.0, 8.0, 24.0, 8.0],
-        [6.0, -8.0, 20.0, 8.0]
+        [5.0, -8.0, 18.0, 8.0]
     ]
     
     target = np.array([0, 16]).reshape([-1, 1])
