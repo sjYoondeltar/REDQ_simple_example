@@ -63,8 +63,8 @@ if __name__ == '__main__':
     obs_list = [
         [-8.0, 0.0, 8.0, 24.0],
         [8.0, 8.0, 24.0, 8.0],
-        [5.0, -8.0, 18.0, 8.0],
-        [-18.0, 4.0, 4.0, 24.0]
+        [4.0, -8.0, 16.0, 8.0],
+        [-19.0, 4.0, 2.0, 24.0]
     ]
     
     target = np.array([0, 16]).reshape([-1, 1])
@@ -72,8 +72,8 @@ if __name__ == '__main__':
     env = NAVI_ENV(
         dT=0.1,
         x_init=[0.0, 0.0, 0],
-        u_min=[0, -np.pi/2],
-        u_max=[4, np.pi/2],
+        u_min=[0, -np.pi/3],
+        u_max=[4, np.pi/3],
         reward_type='polar',
         target_fix=target,
         level=2, t_max=2000, obs_list=obs_list)
