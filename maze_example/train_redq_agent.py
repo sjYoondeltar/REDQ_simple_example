@@ -59,18 +59,18 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     random.seed(args.seed)
-
+    
     obs_list =[
-        [-12.0, 8.0, 16.0, 8.0],
-        [10.0, 8.0, 16.0, 24.0],
-        [4.0, -8.0, 32.0, 8.0]
+        [-8.0, 0.0, 8.0, 24.0],
+        [8.0, 8.0, 24.0, 8.0],
+        [6.0, -8.0, 20.0, 8.0]
     ]
     
-    target = np.array([0, -16]).reshape([-1, 1])
+    target = np.array([0, 16]).reshape([-1, 1])
 
     env = NAVI_ENV(
         dT=0.1,
-        x_init=[-16.0, 16.0, 0],
+        x_init=[0.0, 0.0, 0],
         u_min=[0, -np.pi/3],
         u_max=[4, np.pi/3],
         reward_type='polar',

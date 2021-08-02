@@ -377,12 +377,20 @@ class NAVI_ENV(object):
 
 if __name__ == '__main__':
 
-    wall_list =[[-16.0, 8.0, 8.0, 8.0],
-                [12.0, 8.0, 16.0, 8.0],
-                [-16.0, -8.0, 8.0, 8.0],
-                [12.0, -8.0, 16.0, 8.0]]
+    # wall_list =[[-16.0, 8.0, 8.0, 8.0],
+    #             [12.0, 8.0, 16.0, 8.0],
+    #             [-16.0, -8.0, 8.0, 8.0],
+    #             [12.0, -8.0, 16.0, 8.0]]
 
     # wall_list = None
+
+
+    wall_list =[
+        [-8.0, 0.0, 8.0, 24.0],
+        [8.0, 8.0, 24.0, 8.0],
+        [6.0, -8.0, 20.0, 8.0]
+    ]
+    
 
     # env = NAVI_ENV(x_init=[-17.0, 0.0, 0.0], target_fix=None, reward_type='polar', t_max=500, obs_list=wall_list)
     env = NAVI_ENV(x_init=[0.0, 0, 0.0], level=2, reward_type='polar', t_max=500, obs_list=wall_list)
