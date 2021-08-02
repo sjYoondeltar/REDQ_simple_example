@@ -167,7 +167,9 @@ class NAVI_ENV(object):
 
             r_obs = 0.
 
-        r_live = 0.0*np.clip(self.sensor.sensor_info[np.floor(self.sensor.n_sensor/2).astype('int'), 0]/self.sensor.sensor_max, 0, 0.5)
+        # r_live = 0.0*np.clip(self.sensor.sensor_info[np.floor(self.sensor.n_sensor/2).astype('int'), 0]/self.sensor.sensor_max, 0, 0.5)
+
+        r_live = 0.5 if self.sensor.sensor_info[np.floor(self.sensor.n_sensor/2).astype('int'), 0] < 5 else 0.
 
         if self.dist < self.terminal:
 
@@ -388,7 +390,7 @@ if __name__ == '__main__':
     wall_list =[
         [-8.0, 0.0, 8.0, 24.0],
         [8.0, 8.0, 24.0, 8.0],
-        [5.0, -8.0, 18.0, 8.0]
+        [6.0, -8.0, 20.0, 8.0]
     ]
     
 
