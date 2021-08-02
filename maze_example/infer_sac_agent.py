@@ -45,22 +45,22 @@ if __name__ == '__main__':
     np.random.seed(args.seed)
     random.seed(args.seed)
 
-    obs_list =[
-        [-12.0, 8.0, 16.0, 8.0],
-        [10.0, 8.0, 16.0, 24.0],
-        [4.0, -8.0, 32.0, 8.0]
+    obs_list = [
+        [-8.0, 0.0, 8.0, 24.0],
+        [8.0, 8.0, 24.0, 8.0],
+        [5.0, -8.0, 18.0, 8.0]
     ]
-
-    target = np.array([0, -16]).reshape([-1, 1])
+    
+    target = np.array([0, 16]).reshape([-1, 1])
 
     env = NAVI_ENV(
         dT=0.1,
-        x_init=[-16.0, 16.0, 0],
+        x_init=[0.0, 0.0, 0],
         u_min=[0, -np.pi/3],
         u_max=[4, np.pi/3],
         reward_type='polar',
         target_fix=target,
-        level=2, t_max=3000, obs_list=obs_list)
+        level=2, t_max=2000, obs_list=obs_list)
 
     agent = SACAgent(
         state_size=env.sensor.n_sensor*args.history_window,
