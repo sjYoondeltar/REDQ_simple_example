@@ -14,9 +14,9 @@ def load_record(record_model_type):
 
 def main_plot():
 
-    seed = 4321
+    seed = 7777
 
-    sac_data = load_record('sac')
+    # sac_data = load_record('sac')
 
     sac_g20_data = load_record('sac_g20')
 
@@ -28,13 +28,13 @@ def main_plot():
     
     ax1 = fig.add_subplot(1, 1, 1)
     
-    ax1.plot(sac_data[:, 1], label="Soft Actor Critic")
+    # ax1.plot(sac_data[:, 2], label="Soft Actor Critic")
     
-    ax1.plot(sac_g20_data[:, 1], label="Soft Actor Critic with G = 20")
+    ax1.plot(sac_g20_data[:, 2], label="Soft Actor Critic with G = 20")
     
     # ax1.plot(redq_data[:, 2], label="REDQ")
     
-    ax1.plot(redq_v2_data[:, 1], label="REDQ V2")
+    ax1.plot(redq_v2_data[:, 2], label="REDQ V2")
     
     ax1.set_ylabel("cumulative rewards")
     
@@ -42,9 +42,9 @@ def main_plot():
 
     ax1.set_title(f"maze example : seed {seed:d}")
     
-    ax1.set_xlim([0, 200])
+    ax1.set_xlim([0, 80])
     
-    ax1.set_ylim([0, 600])
+    ax1.set_ylim([0, 400])
 
     ax1.grid()
 
