@@ -61,19 +61,25 @@ if __name__ == '__main__':
     random.seed(args.seed)
     
     obs_list = [
-        [-8.0, 0.0, 8.0, 24.0],
-        [8.0, 8.0, 24.0, 8.0],
-        [4.0, -8.0, 16.0, 8.0],
-        [-19.0, 4.0, 2.0, 24.0]
+        [-16.0, 8.0, 8.0, 8.0],
+        [-8.0, 8.0, 8.0, 8.0],
+        [0.0, 8.0, 8.0, 8.0],
+        [16.0, 16.0, 8.0, 8.0],
+        [16.0, 8.0, 8.0, 8.0],
+        [16.0, 0.0, 8.0, 8.0],
+        [16.0, -8.0, 8.0, 8.0],
+        [8.0, -8.0, 8.0, 8.0],
+        [0.0, -8.0, 8.0, 8.0],
+        [-9.0, -8.0, 10.0, 8.0]
     ]
     
-    target = np.array([0, 16]).reshape([-1, 1])
+    target = np.array([0, -16]).reshape([-1, 1])
 
     env = NAVI_ENV(
         dT=0.1,
-        x_init=[0.0, 0.0, 0],
-        u_min=[0, -np.pi/3],
-        u_max=[4, np.pi/3],
+        x_init=[-16.0, 16.0, 0],
+        u_min=[0, -np.pi/4],
+        u_max=[4, np.pi/4],
         reward_type='polar',
         target_fix=target,
         level=2, t_max=2000, obs_list=obs_list)
@@ -81,11 +87,11 @@ if __name__ == '__main__':
     agent = REDQAgent(
         state_size=env.sensor.n_sensor*args.history_window,
         action_size=1,
-        hidden_size=64,
+        hidden_size=128,
         buffer_size=2**14,
         minibatch_size=256,
         exploration_step=3000,
-        tau=0.1,
+        tau=0.01,
         device=args.device,
         N=args.N,
         G=args.G,

@@ -1,4 +1,5 @@
 import sys
+sys.path.append(".")
 
 import numpy as np
 import cv2
@@ -169,7 +170,7 @@ class NAVI_ENV(object):
 
         # r_live = 0.0*np.clip(self.sensor.sensor_info[np.floor(self.sensor.n_sensor/2).astype('int'), 0]/self.sensor.sensor_max, 0, 0.5)
 
-        r_live = 0.0 if self.sensor.sensor_info[np.floor(self.sensor.n_sensor/2).astype('int'), 0] > 5 else 0.
+        r_live = 0.5 if self.sensor.sensor_info[np.floor(self.sensor.n_sensor/2).astype('int'), 0] > 5 else 0.
 
         if self.dist < self.terminal:
 
@@ -386,17 +387,29 @@ if __name__ == '__main__':
 
     # wall_list = None
 
+    # wall_list =[
+    #     [-8.0, 0.0, 8.0, 24.0],
+    #     [8.0, 8.0, 24.0, 8.0],
+    #     [6.0, -8.0, 20.0, 8.0],
+    #     [-18.0, 4.0, 4.0, 24.0]
+    # ]
 
     wall_list =[
-        [-8.0, 0.0, 8.0, 24.0],
-        [8.0, 8.0, 24.0, 8.0],
-        [6.0, -8.0, 20.0, 8.0],
-        [-18.0, 4.0, 4.0, 24.0]
+        [-16.0, 8.0, 8.0, 8.0],
+        [-8.0, 8.0, 8.0, 8.0],
+        [0.0, 8.0, 8.0, 8.0],
+        [16.0, 16.0, 8.0, 8.0],
+        [16.0, 8.0, 8.0, 8.0],
+        [16.0, 0.0, 8.0, 8.0],
+        [16.0, -8.0, 8.0, 8.0],
+        [8.0, -8.0, 8.0, 8.0],
+        [0.0, -8.0, 8.0, 8.0],
+        [-9.0, -8.0, 10.0, 8.0]
     ]
     
 
     # env = NAVI_ENV(x_init=[-17.0, 0.0, 0.0], target_fix=None, reward_type='polar', t_max=500, obs_list=wall_list)
-    env = NAVI_ENV(x_init=[0.0, 0, 0.0], level=2, reward_type='polar', t_max=500, obs_list=wall_list)
+    env = NAVI_ENV(x_init=[0, 0, 3.1], level=2, reward_type='polar', t_max=500, obs_list=wall_list)
 
 
     for eps in range(3):
@@ -425,7 +438,7 @@ if __name__ == '__main__':
 
         while not env.t_max_reach and not done :
 
-            u = np.array([2*np.random.rand(1), 2*np.pi/3*np.random.rand(1) - np.pi/3]).reshape([-1, 1])
+            u = np.array([3, 2*np.pi/4*1 - np.pi/4]).reshape([-1, 1])
 
             xn, r, done = env.step(u)
 

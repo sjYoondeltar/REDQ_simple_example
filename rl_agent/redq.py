@@ -369,20 +369,28 @@ class REDQAgent(object):
             # update actor
             policy, log_policy = self.eval_action(states)
             
-            q_mean = 0
+            # q_loss = 0
 
-            for i in range(self.N):
+            # for i in range(self.N):
 
-                q_value1 = self.critic_list[i](torch.Tensor(states).to(self.device), policy)
+            #     q_value1 = self.critic_list[i](torch.Tensor(states).to(self.device), policy)
 
-                q_mean = q_mean + q_value1
+            #     q_loss = q_loss + q_value1
 
-            q_mean = q_mean/self.N
+            # q_loss = q_loss/self.N
+
+            idx = np.random.choice(self.N, self.M, replace=False)
             
+            q_value1 = self.critic_list[idx[0]](torch.Tensor(states).to(self.device), policy)
+
+            q_value2 = self.critic_list[idx[1]](torch.Tensor(states).to(self.device), policy)
+
+            q_loss = torch.min(q_value1, q_value2).squeeze(1)
+
             if self.train_alpha:
-                actor_loss = ((self.alpha.to(self.device) * log_policy) - q_mean).mean() 
+                actor_loss = ((self.alpha.to(self.device) * log_policy) - q_loss).mean() 
             else:        
-                actor_loss = ((self.alpha * log_policy) - q_mean).mean() 
+                actor_loss = ((self.alpha * log_policy) - q_loss).mean() 
 
             self.actor_optimizer.zero_grad()
             actor_loss.backward()
