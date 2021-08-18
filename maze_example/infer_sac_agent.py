@@ -65,13 +65,15 @@ if __name__ == '__main__':
     agent = SACAgent(
         state_size=env.sensor.n_sensor*args.history_window,
         action_size=1,
-        hidden_size=64,
+        hidden_size=128,
         buffer_size=2**14,
         minibatch_size=256,
         exploration_step=3000,
+        tau=0.01,
         device=args.device,
         G=args.G
     )
+
 
     model_type = 'sac' if args.G==1 else f'sac_g{args.G}'
 

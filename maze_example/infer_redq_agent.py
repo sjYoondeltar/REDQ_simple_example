@@ -71,14 +71,15 @@ if __name__ == '__main__':
     agent = REDQAgent(
         state_size=env.sensor.n_sensor*args.history_window,
         action_size=1,
-        hidden_size=64,
+        hidden_size=128,
         buffer_size=2**14,
         minibatch_size=256,
         exploration_step=3000,
+        tau=0.01,
         device=args.device,
         N=args.N,
         G=args.G,
-        version=args.version
+        version=args.version,
     )
 
     model_type = 'redq' if args.version == 'v1' else 'redq_v2'
