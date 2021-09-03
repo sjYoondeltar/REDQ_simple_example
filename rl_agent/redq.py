@@ -387,7 +387,7 @@ class REDQAgent(object):
 
             # q_loss = torch.min(q_value1, q_value2).squeeze(1)
 
-            q_loss = (q_value1 + q_value2)/2
+            q_loss = (0.5*q_value1 + 0.5*q_value2).squeeze(1)
 
             if self.train_alpha:
 
