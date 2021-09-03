@@ -385,9 +385,9 @@ class REDQAgent(object):
 
             q_value2 = self.critic_list[idx[1]](torch.Tensor(states).to(self.device), policy)
 
-            # q_loss = torch.min(q_value1, q_value2).squeeze(1)
+            q_loss = torch.min(q_value1, q_value2).squeeze(1)
 
-            q_loss = (0.5*q_value1 + 0.5*q_value2).squeeze(1)
+            # q_loss = (0.5*q_value1 + 0.5*q_value2).squeeze(1)
 
             if self.train_alpha:
 
