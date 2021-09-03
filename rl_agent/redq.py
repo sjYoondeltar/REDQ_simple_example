@@ -369,7 +369,7 @@ class REDQAgent(object):
             # update actor
             policy, log_policy = self.eval_action(states)
             
-            # q_loss = 0
+            q_loss = 0
 
             # for i in range(self.N):
 
@@ -390,8 +390,11 @@ class REDQAgent(object):
             q_loss = (q_value1 + q_value2)/2
 
             if self.train_alpha:
-                actor_loss = ((self.alpha.to(self.device) * log_policy) - q_loss).mean() 
-            else:        
+
+                actor_loss = ((self.alpha.to(self.device) * log_policy) - q_loss).mean()
+                
+            else:
+
                 actor_loss = ((self.alpha * log_policy) - q_loss).mean() 
 
             self.actor_optimizer.zero_grad()
